@@ -28,7 +28,6 @@ body {
 main {
   background: white;
   width: 400px;
-  width: 100%;
   height: 100dvh;
   overflow-x: hidden;
   overflow-y: auto;
@@ -64,7 +63,7 @@ main {
     height: 100vh;
     overflow-y: auto;
     background: #f8f8f8;
-    z-index: 50;
+    z-index: 60;
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
@@ -485,7 +484,6 @@ main {
     background: #fff;
     box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.17);
 
-
     display: grid;
     place-items: center;
 
@@ -652,13 +650,13 @@ main {
 }
 
 .panier_ico {
-  position: absolute;
+  position: fixed;
   top: 3%;
   right: 5%;
   width: 2rem;
   height: 2rem;
   flex-shrink: 0;
-
+  z-index: 2;
   border-radius: 1rem;
   background: #f7efea;
   box-shadow: 0px -2px 7px 0px rgba(0, 0, 0, 0.14);
@@ -825,23 +823,22 @@ main {
     overflow: hidden;
     height: 35vh;
     position: relative;
-   
-      .img{
+
+    .img {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      position: absolute;
+      left: 0;
+      top: 0;
+      transition: all 0.3s ease;
+
+      img {
         width: 100%;
         height: 100%;
-        overflow: hidden;
-        position: absolute;
-        left: 0;
-        top: 0;
-        transition: all 0.3s ease;
-    
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
+        object-fit: cover;
       }
-   
+    }
   }
 
   .menuInfo {
@@ -1008,7 +1005,7 @@ main {
   display: grid;
   place-items: center;
 
-  *{
+  * {
     transition: all 0.3s ease;
   }
 
@@ -1062,11 +1059,18 @@ main {
   }
 }
 
+.greenBtn {
+  background: #e7f4d1;
+  .btn_command {
+    background-color: var(--green);
+  }
+}
+
 .btn_close_panier {
   position: fixed;
   top: 3%;
   right: 3%;
-  z-index: 50%;
+  z-index: 50;
   background: white;
 
   width: 40px;
@@ -1075,4 +1079,228 @@ main {
   svg {
     width: 30%;
   }
+}
+
+.Checkout {
+  .CheckoutpanierBox {
+    z-index: 1 !important;
+    .panierBox__struct {
+      h4 {
+        font-size: 1.3em;
+      }
+    }
+  }
+
+  .panierListCheckout {
+    margin-top: 1em !important;
+    .panierList__struct {
+      .formCheckout {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5em;
+        font-family: "Acorn_r";
+
+        margin-top: 1em;
+
+        .inputBox {
+          border-radius: 20.5px;
+          border-style: solid;
+          border-color: var(--black);
+          border-width: 1px;
+          height: 2.8625em;
+          width: 100%;
+          position: relative;
+
+          display: grid;
+          place-items: center;
+
+          .label {
+            position: absolute;
+            left: 5%;
+            top: 0;
+            font-family: "Acorn_r" !important;
+            display: inline-block;
+            transform: translateY(-50%);
+            background: white;
+            padding-left: 7px;
+            padding-right: 15px;
+            color: var(--black);
+
+            &::after {
+              position: absolute;
+              top: 0;
+              right: 10px;
+              transform: translateX(100%);
+              color: var(--orange);
+              content: attr(attr);
+            }
+          }
+
+          input,
+          textarea {
+            background: none;
+            border: none;
+            color: var(--black);
+            font-family: "Acorn_r" !important;
+
+            width: 85%;
+          }
+
+          textarea {
+            padding-top: 15px;
+          }
+
+          input:focus,
+          textarea:focus {
+            color: var(--orange) !important;
+            border-color: var(--orange) !important;
+            font-weight: bold;
+            &::placeholder {
+              color: var(--orange) !important;
+              opacity: 0.3;
+            }
+          }
+        }
+
+        .inputBox:hover:not(.optionOrder) {
+          color: var(--orange) !important;
+          border-color: var(--orange) !important;
+
+          &::placeholder {
+            color: var(--orange) !important;
+            opacity: 0.3;
+          }
+
+          .label {
+            color: var(--orange);
+          }
+        }
+
+        .textareaBox,
+        .optionOrder {
+          height: auto;
+        }
+
+        .optionOrder {
+          &__struct {
+            width: 90%;
+            padding-top: 15px;
+            padding-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5em;
+            input {
+              width: auto;
+              display: block;
+              accent-color: var(--orange);
+            }
+
+            .radio {
+              display: flex;
+              align-items: baseline;
+            }
+          }
+        }
+
+        .notice {
+          background: #f7efea;
+          border-radius: 17px;
+          height: auto;
+          width: 100%;
+          position: relative;
+
+          display: grid;
+          place-items: center;
+
+          &__struct {
+            width: 93%;
+            height: auto;
+            margin-top: 12px;
+            margin-bottom: 12px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+
+            .text {
+              color: #525252;
+              text-align: left;
+              font-size: 0.8em;
+              line-height: 1.3em;
+              width: 93%;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.Finalize {
+  display: grid;
+  place-items: center;
+
+  * {
+    text-align: center;
+  }
+
+  .main_struct {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .image {
+    display: block;
+    width: 80%;
+    overflow: hidden;
+    img {
+      width: 100%;
+    }
+  }
+
+  .container {
+    display: block;
+    width: 100%;
+
+    h2 {
+      color: var(--green);
+      font-size: 2.2em;
+      margin-bottom: 0;
+    }
+
+    p {
+      color: #7e7e7e;
+      font-size: 1em;
+    }
+
+    .timer {
+      display: block;
+      .title {
+        font-size: 0.7em;
+      }
+      .timer_value {
+        font-size: 10vw;
+        color: var(--orange);
+        font-weight: bold;
+      }
+    }
+
+    .bnt {
+      background: var(--orange);
+      border-radius: 60px;
+      width: 100%;
+      height: 70px;
+      color: white;
+      display: grid;
+      place-items: center;
+      margin-top: 2em;
+    }
+  }
+}
+
+button{
+  border: none;
 }

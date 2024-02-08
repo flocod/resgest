@@ -20,6 +20,9 @@ const BagOrder = (props) => {
   }
 
   amoutBasket = initAmoutBasket;
+
+  
+
   // Fonction pour supprimer un élément du panier
   const removeFromCart = (itemId) => {
     if (cart) {
@@ -28,6 +31,13 @@ const BagOrder = (props) => {
       setCart([...updatedCart])
     }
   };
+
+  useEffect(() => {
+
+    return () => {
+        
+    };
+  }, [cart]);
 
 
   return (
@@ -77,7 +87,7 @@ const BagOrder = (props) => {
         </div>
       </div>
 
-      <BtnCommand amoutBasket={amoutBasket}></BtnCommand>
+      <BtnCommand to="/checkout" amoutBasket={amoutBasket}></BtnCommand>
 
       <div
         className="btn_close rounded_btn btn_close_panier link"

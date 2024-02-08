@@ -42,7 +42,7 @@ const MenuDetails = () => {
             nom: document.querySelector(".menu_title").textContent,
             qte: count,
             price: Number(document.querySelector(".price").getAttribute("value")) * count,
-            time: Date.now(),
+            time: 20,
             devise: "FCFA",
           };
           const storageCart = localStorage.getItem("cart");
@@ -81,10 +81,6 @@ const MenuDetails = () => {
     }
   };
 
-  const addToBasket = () => {
-    // Implement the logic to add to the basket
-    console.log(`Added ${count} item(s) to the basket`);
-  };
 
   useEffect(() => {
     const carrousel = document.querySelectorAll(".carrousel .img");
@@ -176,7 +172,7 @@ const MenuDetails = () => {
             </div>
 
             <div className="menu_stat">
-              <MenuTimePreparation time="50"></MenuTimePreparation>
+              <MenuTimePreparation time="20"></MenuTimePreparation>
               <MenuUserView views="56349"></MenuUserView>
             </div>
 
@@ -259,7 +255,7 @@ const MenuDetails = () => {
 
       <div className="main_struct"></div>
 
-      <BtnCommand amoutBasket={amoutBasket}></BtnCommand>
+      <BtnCommand to="/checkout" amoutBasket={amoutBasket}></BtnCommand>
 
       {isPanierDisplay && (
         <>
