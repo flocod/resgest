@@ -1,10 +1,10 @@
 import { React, useState, useRef } from "react";
 
-import plat1 from "../images/Rectangle 1651.jpg";
-import plat2 from "../images/Rectangle 1652.jpg";
-import plat3 from "../images/Rectangle 1650.jpg";
-import banner from "../images/3D Food Icon by @OdafeUI.png";
-import aboutImg from "../images/about.png";
+import plat1 from "../images/Rectangle 1651.webp";
+import plat2 from "../images/Rectangle 1652.webp";
+import plat3 from "../images/Rectangle 1650.webp";
+import banner from "../images/3D Food Icon by @OdafeUI.webp";
+import aboutImg from "../images/about.webp";
 import BtnRead from "../components/BtnRead";
 import Panier from "../components/Panier";
 import MenuItem from "../components/MenuItem";
@@ -23,8 +23,6 @@ const HomePage = () => {
   const closePanier = () => {
     setIsPanierDisplay(false);
   };
-
-
 
   const aboutDiv = useRef();
 
@@ -132,7 +130,10 @@ const HomePage = () => {
           </div>
         </div>
 
-        <div className="rounded_btn btn_close action_close" onClick={props.onClose}>
+        <div
+          className="rounded_btn btn_close action_close"
+          onClick={props.onClose}
+        >
           <svg
             width={16}
             height={16}
@@ -347,7 +348,7 @@ const HomePage = () => {
         <div className="main_struct">
           <div className="menu_list">
             <MenuItem
-            id="1"
+              id="1"
               nom="Grillade de porc épicée"
               descr="Délicieux et pimentée, la grillade de porc épicé est un plat qui
             marie parfaitement la tendreté de la viande de porc avec une
@@ -361,7 +362,7 @@ const HomePage = () => {
               devise="FCFA"
             ></MenuItem>
             <MenuItem
-            id="2"
+              id="2"
               nom="Grillade de porc épicée"
               descr="Délicieux et pimentée, la grillade de porc épicé est un plat qui
             marie parfaitement la tendreté de la viande de porc avec une
@@ -375,7 +376,7 @@ const HomePage = () => {
               devise="FCFA"
             ></MenuItem>
             <MenuItem
-            id="3"
+              id="3"
               nom="Grillade de porc épicée"
               descr="Délicieux et pimentée, la grillade de porc épicé est un plat qui
             marie parfaitement la tendreté de la viande de porc avec une
@@ -389,7 +390,7 @@ const HomePage = () => {
               devise="FCFA"
             ></MenuItem>
             <MenuItem
-            id="4"
+              id="4"
               nom="Grillade de porc épicée"
               descr="Délicieux et pimentée, la grillade de porc épicé est un plat qui
             marie parfaitement la tendreté de la viande de porc avec une
@@ -425,8 +426,6 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-
-       
       </div>
       <div className="table_box">table 01</div>
       <Panier handleClick={displayPanier} item="05"></Panier>
@@ -439,17 +438,11 @@ const HomePage = () => {
         )}
       </div>
 
-{isPanierDisplay && (
-  <>
-  <BagOrder  handleClick={closePanier} ></BagOrder>
-  </>
-)}
-
-     
-
-
-     
-
+      {isPanierDisplay && (
+        <>
+          <BagOrder handleClick={closePanier}></BagOrder>
+        </>
+      )}
     </main>
   );
 };

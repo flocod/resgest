@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
-import perper from "../../menuApp/images/3D Food Icon by perper.png";
+import perper from "../../menuApp/images/3D Food Icon by perper.webp";
 import PanierItem from "../components/PanierItem";
 import BagOrder from "../components/BagOrder";
 import BtnCommand from "../components/BtnCommand";
 import Panier from "../components/Panier";
 import { formatNumberWith } from "../../utils";
 import { NavLink } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
-
-
+import { useNavigate } from "react-router-dom";
 
 const Checkout = (props) => {
   let initAmoutBasket = 0;
@@ -41,13 +39,14 @@ const Checkout = (props) => {
       console.log("Formulaire soumis");
 
       localStorage.setItem("formDATA", JSON.stringify(formData));
-      console.log("localStorage : ",localStorage.getItem("formDATA"));
+      console.log("localStorage : ", localStorage.getItem("formDATA"));
 
       navigate("/finalize");
-
-    }else{
-      alert(`${errors.nom} ${errors.tel} ${errors.option}`);
-
+    } else {
+      let msg = errors.nom && errors.nom !== undefined ? errors.nom : "";
+      msg = errors.tel && errors.tel !== undefined ? msg + "; " + errors.tel : "";
+      msg = errors.option && errors.option !== undefined  ? msg + "; " + errors.option : "";
+      alert(msg);
     }
   };
 

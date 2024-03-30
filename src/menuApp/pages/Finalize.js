@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import imgFinal from "../images/3D Food Icon by  final.png";
+import imgFinal from "../images/3D Food Icon by  final.webp";
 import { NavLink } from "react-router-dom";
 import CountDownTimer from "../components/CountDownTimer";
 const Finalize = (props) => {

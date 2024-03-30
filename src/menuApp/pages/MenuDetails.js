@@ -1,7 +1,7 @@
 import { React, useState } from "react";
 import { NavLink } from "react-router-dom";
-import plat1 from "../images/Rectangle 1651.jpg";
-import plat2 from "../images/Rectangle 1650.jpg";
+import plat1 from "../images/Rectangle 1651.webp";
+import plat2 from "../images/Rectangle 1650.webp";
 import Panier from "../components/Panier";
 import MenuTimePreparation from "../components/MenuTimePreparation";
 import MenuUserView from "../components/MenuUserView";

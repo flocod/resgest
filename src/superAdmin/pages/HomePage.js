@@ -1,9 +1,9 @@
 import React from "react";
 
-import plat1 from "../images/Rectangle 1651.jpg";
-import plat2 from "../images/Rectangle 1652.jpg";
-import plat3 from "../images/Rectangle 1650.jpg";
-import banner from "../images/3D Food Icon by @OdafeUI.png";
+import plat1 from "../images/Rectangle 1651.webp";
+import plat2 from "../images/Rectangle 1652.webp";
+import plat3 from "../images/Rectangle 1650.webp";
+import banner from "../images/3D Food Icon by @OdafeUI.webp";
 
 
 

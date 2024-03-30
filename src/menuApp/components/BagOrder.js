@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import perper from "../../menuApp/images/3D Food Icon by perper.png";
+import perper from "../../menuApp/images/3D Food Icon by perper.webp";
 import PanierItem from "./PanierItem";
 import BtnCommand from "./BtnCommand";
 import { formatNumberWith } from "../../utils";
