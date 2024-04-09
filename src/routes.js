@@ -8,7 +8,13 @@ import Connexion from "./Admin/pages/Connexion";
 import ResetPassword from "./Admin/pages/ResetPassword";
 import CreateAccount from "./Admin/pages/CreateAccount";
 import Dashboard from "./Admin/pages/Dashboard";
-
+import Orders from "./Admin/pages/Orders";
+import Menus from "./Admin/pages/Menus";
+import AddMenus from "./Admin/pages/AddMenus";
+import Categories from "./Admin/pages/Categories";
+import Sales from "./Admin/pages/Sales";
+import Admin from "./Admin/pages/Admin";
+import Settings from "./Admin/pages/Settings";
 const routes = () => {
 
   return (
@@ -23,7 +29,15 @@ const routes = () => {
       <Route  exact path="/admin/" element={<Connexion />} />
       <Route  exact path="/admin/resetpassword" element={<ResetPassword />} />
       <Route  exact path="/admin/createaccount" element={<CreateAccount />} />
-      <Route  exact path="/admin/app" element={<Dashboard />} />
+      <Route  exact path="/admin/app/" element={<Dashboard />} />
+      <Route  exact path="/admin/app/dashboard" element={<Dashboard />} />
+      <Route  exact path="/admin/app/orders" element={<Orders />} />
+      <Route  exact path="/admin/app/menus" element={<Menus />} />
+      <Route  exact path="/admin/app/menus/addmenus" element={<AddMenus />} />
+      <Route  exact path="/admin/app/categories" element={<Categories />} />
+      <Route  exact path="/admin/app/sales" element={<Sales />} />
+      <Route  exact path="/admin/app/admin" element={<Admin />} />
+      <Route  exact path="/admin/app/settings" element={<Settings />} />
 
     </Routes>
   );

@@ -32,7 +32,7 @@ const HomePage = () => {
     const about = aboutDiv.current;
     about.querySelector(".aboutStruct").style =
       "width:100%; padding-bottom:10vh";
-    about.querySelector(".aboutStruct .aboutText p").style = "display:block";
+    about.querySelector(".aboutStruct .aboutText pre").style = "display:block";
     about.querySelector(".aboutStruct .aboutImg").style =
       "border-radius: 0px 0px 27px 27px !important";
     about.style = `
@@ -60,68 +60,21 @@ const HomePage = () => {
           <div className="aboutText">
             <div className="aboutText__struct">
               <h2>Friend's Food Restaurant</h2>
-              <p>
-                Le nouveau local Friend's Food Bonamoussadi est situé au
-                carrefour JC, en face de la station neptune, collé à Axa
-                Assurance. Pour passer du temps avec vos amis après le travail
-                et savourer des plats savoureux, rendez-vous au restaurant
-                Friend’s Food, Bonamoussadi tenu par l’illustre Chef Stephane
-                Nounamo. Ici, ils servent des grillades incroyables, sont
-                spécialisés en roulade mixte et ont un barbecue qui améliorera
-                la qualité du temps, que vous passerez avec vos amis après le
-                travail. Le comportement et le service du personnel sont assez
-                corrects et leurs grillades sont vraiment délicieux, ce qui vous
-                incitera à visiter cet endroit encore et encore. Pour extraire
-                le meilleur de cet endroit, ne manquez pas leurs hamburgers,
-                leurs frites, leurs grillades, leurs saucisses grillées, leurs
-                steaks, leurs roulades mixtes et leurs menus composés tel que le
-                fameux Hawaï ou le Tel-Aviv 1/2 et plusieurs autres plats. La
-                terrasse, que vous trouverez ici, vous permettra de vous
-                détendre et de passer du bon temps avec vos amis ou en couple.
-                Venez donc au Friend's Food à Bonamoussadi dans Douala, et
-                dégustez des grillades savoureuses, dont vous vous souviendrez
-                longtemps.
-                <br />
-                Le nouveau local Friend's Food Bonamoussadi est situé au
-                carrefour JC, en face de la station neptune, collé à Axa
-                Assurance. Pour passer du temps avec vos amis après le travail
-                et savourer des plats savoureux, rendez-vous au restaurant
-                Friend’s Food, Bonamoussadi tenu par l’illustre Chef Stephane
-                Nounamo. Ici, ils servent des grillades incroyables, sont
-                spécialisés en roulade mixte et ont un barbecue qui améliorera
-                la qualité du temps, que vous passerez avec vos amis après le
-                travail. Le comportement et le service du personnel sont assez
-                corrects et leurs grillades sont vraiment délicieux, ce qui vous
-                incitera à visiter cet endroit encore et encore. Pour extraire
-                le meilleur de cet endroit, ne manquez pas leurs hamburgers,
-                leurs frites, leurs grillades, leurs saucisses grillées, leurs
-                steaks, leurs roulades mixtes et leurs menus composés tel que le
-                fameux Hawaï ou le Tel-Aviv 1/2 et plusieurs autres plats. La
-                terrasse, que vous trouverez ici, vous permettra de vous
-                détendre et de passer du bon temps avec vos amis ou en couple.
-                Venez donc au Friend's Food à Bonamoussadi dans Douala, et
-                dégustez des grillades savoureuses, dont vous vous souviendrez
-                longtemps. Le nouveau local Friend's Food Bonamoussadi est situé
-                au carrefour JC, en face de la station neptune, collé à Axa
-                Assurance. Pour passer du temps avec vos amis après le travail
-                et savourer des plats savoureux, rendez-vous au restaurant
-                Friend’s Food, Bonamoussadi tenu par l’illustre Chef Stephane
-                Nounamo. Ici, ils servent des grillades incroyables, sont
-                spécialisés en roulade mixte et ont un barbecue qui améliorera
-                la qualité du temps, que vous passerez avec vos amis après le
-                travail. Le comportement et le service du personnel sont assez
-                corrects et leurs grillades sont vraiment délicieux, ce qui vous
-                incitera à visiter cet endroit encore et encore. Pour extraire
-                le meilleur de cet endroit, ne manquez pas leurs hamburgers,
-                leurs frites, leurs grillades, leurs saucisses grillées, leurs
-                steaks, leurs roulades mixtes et leurs menus composés tel que le
-                fameux Hawaï ou le Tel-Aviv 1/2 et plusieurs autres plats. La
-                terrasse, que vous trouverez ici, vous permettra de vous
-                détendre et de passer du bon temps avec vos amis ou en couple.
-                Venez donc au Friend's Food à Bonamoussadi dans Douala, et
-                dégustez des grillades savoureuses, dont vous vous souviendrez
-                longtemps.
-              </p>
+<div>
+<pre> 📍 Localisation : Carrefour JC, en face de la station Neptune, collé à Axa Assurance, Bonamoussadi, Douala.
+
+Pour passer du temps avec vos amis après le travail et savourer des plats savoureux, rendez-vous au restaurant Friend’s Food, Bonamoussadi, tenu par l'illustre Chef Stéphane Nounamo.
+
+Ici, ils servent des grillades incroyables 🥩, sont spécialisés en roulade mixte 🌯, et ont un barbecue qui améliorera la qualité du temps que vous passerez avec vos amis après le travail.
+
+Le comportement et le service du personnel sont assez corrects et leurs grillades sont vraiment délicieuses, ce qui vous incitera à visiter cet endroit encore et encore. Pour extraire le meilleur de cet endroit, ne manquez pas leurs hamburgers 🍔, leurs frites 🍟, leurs saucisses grillées, leurs steaks 🥩, leurs roulades mixtes 🌯 et leurs menus composés tels que le fameux Hawaï ou le Tel-Aviv 1/2, ainsi que plusieurs autres plats.
+
+La terrasse, que vous trouverez ici, vous permettra de vous détendre et de passer du bon temps avec vos amis ou en couple.
+
+Venez donc au Friend's Food à Bonamoussadi dans Douala, et dégustez des grillades savoureuses, dont vous vous souviendrez longtemps. 🍽️🥂</pre>
+
+
+</div>
               {/* <button onClick={props.onClose}>Close Popup</button> */}
               <div className="btn_read">
                 <BtnRead action={handlePlus}> </BtnRead>

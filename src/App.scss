@@ -452,7 +452,7 @@ main {
       border-radius: 2.5rem;
       line-height: 1em;
       border: 1px solid rgba(0, 0, 0, 0.2);
-
+      cursor: pointer;
       &:first-child {
         margin-left: 3%;
       }
@@ -772,18 +772,21 @@ main {
           margin-top: 15px;
         }
 
-        p {
-          color: var(--black);
-          text-align: justify;
-          margin-top: 5px;
-          font-size: 13px;
-          font-family: "Acorn_r";
-          width: 100%;
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 4;
-          overflow: hidden;
-        }
+div{
+  pre {
+    color: var(--black);
+    text-align: justify;
+    margin-top: 5px;
+    font-size: 13px;
+    font-family: "Acorn_r";
+    width: 100%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+    white-space: pre-wrap;
+  }
+}
 
         .btn_read {
           width: 100%;
