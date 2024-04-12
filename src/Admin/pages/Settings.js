@@ -114,6 +114,7 @@ const Settings = () => {
                   <form className="contentForm__struct">
                     <div className="head_statItem">
                       <span className="title">Categories List</span>
+                      <div className="Pmargin"></div>
                     </div>
 
                     <div className="flexContainer">

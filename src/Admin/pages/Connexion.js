@@ -23,7 +23,7 @@ const Connexion = () => {
         <div className="contentForm">
           <div className="contentForm__struct">
             <h1>Welcome Back</h1>
-            <p>Enter your credential to login</p>
+            <p className="Pmargin">Enter your credential to login</p>
 
             <div className="inputContainter">
               <div className="input">

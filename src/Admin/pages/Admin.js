@@ -193,6 +193,7 @@ const Admin = () => {
                     <form className="contentForm__struct  ">
                       <div className="head_statItem">
                         <span className="title">Add an administrator</span>
+                        <div className="Pmargin"></div>
                       </div>
                       <div className="FormAddMenu__struct">
                         <div className="inputContainter">

@@ -71,6 +71,8 @@ body {
       width: 85%;
       margin-top: 30px;
 
+      
+
       .link {
         color: var(--orange);
       }
@@ -85,8 +87,13 @@ body {
         margin-top: 0;
         margin-bottom: 0;
       }
+
+      .Pmargin{
+        margin-bottom: 1.5em;
+      }
+
       .inputContainter {
-        margin-top: 40px;
+    
 
         .input {
           border-radius: 6px;
@@ -95,7 +102,7 @@ body {
           border-width: 2px;
           height: 53px;
           position: relative;
-          margin-bottom: 30px;
+          margin-bottom: 1em;
 
           &:last-child {
             margin-bottom: 0px;
@@ -120,7 +127,7 @@ body {
           textarea,
           select,
           input {
-            width: 100%;
+            width: calc(100% - 40px);
             height: 100%;
             border: none;
             background: none;
@@ -196,13 +203,21 @@ body {
           }
         }
 
+
+
         .inputTextarea {
           height: auto;
+         
+          margin-top: 1em;
         }
 
         .inputFile {
           height: 200px;
         }
+      }
+
+      .inputFileContainer{
+        margin-top: 1.5em;
       }
 
       .flexContainer {
@@ -257,6 +272,12 @@ body {
         margin-top: 30px;
         margin-bottom: 30px;
       }
+
+
+      .inputMargin{
+        margin-bottom: 1em !important;
+      }
+
     }
   }
 
@@ -283,6 +304,11 @@ body {
         }
       }
     }
+
+    .Pmargin{
+      margin-bottom: 4em;
+    }
+
   }
 }
 
@@ -937,6 +963,7 @@ body {
                 font-size: 1em;
               }
             }
+
           }
 
           .statValue {

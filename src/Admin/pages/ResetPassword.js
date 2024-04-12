@@ -41,7 +41,7 @@ const ResetPassword = () => {
             </div>
 
             <h1>Reset your password</h1>
-            <p>A reset Link will be send to your email address </p>
+            <p className="Pmargin">A reset Link will be send to your email address </p>
 
             <div className="inputContainter">
               <div className="input">

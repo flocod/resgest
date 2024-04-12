@@ -235,6 +235,7 @@ const Categories = () => {
                     <form className="contentForm__struct  ">
                       <div className="head_statItem">
                         <span className="title">Add a meal Category</span>
+                        <div className="Pmargin"></div>
                       </div>
                       <div className="FormAddMenu__struct">
                         <div className="inputContainter">

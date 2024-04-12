@@ -69,9 +69,9 @@ const AddMenus = () => {
               <div className="contentForm createaccount">
                 <form className="contentForm__struct  ">
                   <div className="FormAddMenu__struct">
-                    <div className="flexContainer">
+                    <div className="flexContainer inputMargin">
                       <div
-                        className="inputContainter"
+                        className="inputContainter "
                         onClick={handleClickCover_btn}
                       >
                         <div className="input inputFile">
@@ -168,7 +168,7 @@ const AddMenus = () => {
                     </div>
 
                     <div className="flexContainer">
-                      <div className="inputContainter">
+                      <div className="inputContainter ">
                         <div className="input">
                           <label htmlFor="">
                             Meal Name <sup>*</sup>
