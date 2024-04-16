@@ -9,3 +9,6 @@ export const increment = () => ({
   export const menuio = () => ({
     type: 'MENUIO',
   });
+  export const userconnection = () => ({
+    type: 'USERCONNECTION',
+  });

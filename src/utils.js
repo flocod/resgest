@@ -1,10 +1,24 @@
 // util.js
 
 // Fonction pour ajouter des séparateurs de milliers à un nombre
-export const formatNumberWith = (number, separator) => {
+export const formatNumberWith = (number, separator=',') => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, separator);
   };
-export const countryPhone = [{"country":"Afghanistan","code":"93","iso":"AF"},
+
+  export const getUserData = () => {
+    return JSON.parse(localStorage.getItem("CurrentUser"));
+  };
+
+
+  export const trimLongString = (text, maxLength) => {
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + "...";
+    } else {
+      return text;
+    }
+  };
+
+  export const countryPhone = [{"country":"Afghanistan","code":"93","iso":"AF"},
 {"country":"Albania","code":"355","iso":"AL"},
 {"country":"Algeria","code":"213","iso":"DZ"},
 {"country":"American Samoa","code":"1-684","iso":"AS"},
@@ -244,3 +258,19 @@ export const countryPhone = [{"country":"Afghanistan","code":"93","iso":"AF"},
 {"country":"Yemen","code":"967","iso":"YE"},
 {"country":"Zambia","code":"260","iso":"ZM"},
 {"country":"Zimbabwe","code":"263","iso":"ZW"}];
+
+export const validatePhoneNumberAndCountry =  (phoneNumber) => {
+    const cleanedPhoneNumber = phoneNumber.replace(/\D/g, ""); // Nettoyer le numéro de téléphone
+    const countryCode = cleanedPhoneNumber.substring(0, 3); // Récupérer les 3 premiers caractères du numéro
+
+    const country = countryPhone.find(
+      (country) => country.code === countryCode
+    );
+    if (country) {
+      return country.country; // Retourner le pays correspondant
+    }
+
+    return null; // Retourner null si aucun pays n'est trouvé
+  }
+
+

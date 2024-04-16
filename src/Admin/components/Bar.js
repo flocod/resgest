@@ -1,13 +1,28 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { menuio } from "../../redux/action";
-
-const Bar = ({menuio,toggleMenu}) => {
+import { userDeconnection } from "../API/api";
+import { getUserData } from "../../utils";
+import { useNavigate } from "react-router-dom";
+const Bar = ({ menuio, toggleMenu, name }) => {
   const [isActiveDropUser, setIsActiveDropUser] = useState(false);
 
+  const navigate = useNavigate();
+  const userdata = getUserData();
   const toggleDropUser = () => {
     setIsActiveDropUser(!isActiveDropUser);
   };
+
+
+  const handleDeconnection = ()=>{
+    const formData = new FormData();
+          formData.append("USER_ID", userdata.user.USER_ID)
+    userDeconnection(formData, userdata.token)
+    .then((res) => {
+      localStorage.removeItem('CurrentUser');
+      navigate('/admin');
+    });
+  }
 
   return (
     <div className="bar_activity">
@@ -165,7 +180,9 @@ const Bar = ({menuio,toggleMenu}) => {
             </svg>
           </div>
 
-          <div className="text">John Joe</div>
+          <div className="text">
+            {userdata.user.USER_SUBNAME + " " + userdata.user.USER_NAME}
+          </div>
 
           <svg
             width={9}
@@ -185,7 +202,7 @@ const Bar = ({menuio,toggleMenu}) => {
           >
             <span className="span">Edit Profile</span>
             <span className="span">Settings</span>
-            <span className="span">Deconnexion</span>
+            <span onClick={handleDeconnection} className="span">Deconnexion</span>
           </div>
         </div>
       </div>
@@ -193,13 +210,12 @@ const Bar = ({menuio,toggleMenu}) => {
   );
 };
 
-
 const mapStateToProps = (state) => ({
-    menuio: state.menuio,
-  });
-  
-  const mapDispatchToProps = {
-    menuio
-  };
-  
-  export default connect(mapStateToProps, mapDispatchToProps)(Bar);
+  menuio: state.menuio,
+});
+
+const mapDispatchToProps = {
+  menuio,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Bar);

@@ -2,11 +2,18 @@ import React, { useRef, useState } from "react";
 import Swal from "sweetalert2";
 import { NavLink } from "react-router-dom";
 import "./styles.scss";
-import { countryPhone } from "../../utils";
+import { validatePhoneNumberAndCountry } from "../../utils";
+import { createEstablishmentUser } from "../API/api";
+import { useNavigate } from "react-router-dom";
 
 const CreateAccount = () => {
   const [isPasswordHide, setPasswordHide] = useState(false);
   const [selectedInputFile, setSelectedInputFile] = useState("");
+
+  const [formData, setFormData] = useState({});
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   let logo_input = useRef();
   let cover_input = useRef();
@@ -48,9 +55,6 @@ const CreateAccount = () => {
     setSelectedInputFile("coverIMG");
   };
 
-  const [formData, setFormData] = useState({});
-  const [error, setError] = useState("");
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -63,19 +67,6 @@ const CreateAccount = () => {
     handleChange(e);
   };
 
-  function validatePhoneNumberAndCountry(phoneNumber) {
-    const cleanedPhoneNumber = phoneNumber.replace(/\D/g, ""); // Nettoyer le numéro de téléphone
-    const countryCode = cleanedPhoneNumber.substring(0, 3); // Récupérer les 3 premiers caractères du numéro
-
-    const country = countryPhone.find(
-      (country) => country.code === countryCode
-    );
-    if (country) {
-      return country.country; // Retourner le pays correspondant
-    }
-
-    return null; // Retourner null si aucun pays n'est trouvé
-  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -150,7 +141,7 @@ const CreateAccount = () => {
           newFormData.append("USER_NAME", value);
           break;
         case "user_surname":
-          newFormData.append("USER_SURNAME", value);
+          newFormData.append("USER_SUBNAME", value);
           break;
         case "est_name":
           newFormData.append("ESTABLISHMENT_NAME", value);
@@ -192,43 +183,12 @@ const CreateAccount = () => {
 
     console.log("newFormData : ", newFormData);
 
-    // Envoi des données à l'API
-    const URL_API = "http://127.0.0.1:3007/api/public/establishment/";
-    fetch(URL_API, {
-      method: "POST",
-      body: newFormData,
-      redirect: "follow",
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log("data :", data);
-
-        if (data.reponse === 1) {
-          Swal.fire({
-            icon: "success",
-            title: "Succès",
-            text: `${data.message}`,
-          });
-          // formRef.current.reset();
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Erreur",
-            text: `${data.message}`,
-          });
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-
-        Swal.fire({
-          icon: "error",
-          title: "Erreur",
-          text: "Une erreur s'est produite lors de l'envoi des données.",
-        });
-      });
+    createEstablishmentUser(newFormData).then((res)=>{
+      if(res){
+        navigate('/admin');
+      }
+  
+    });
   };
 
   return (
@@ -293,7 +253,7 @@ const CreateAccount = () => {
                     type="tel"
                     id="user_tel"
                     name="user_tel"
-                    placeholder="Enter your number"
+                    placeholder="Tel:+23782050213"
                     required
                   />
                 </div>
@@ -357,7 +317,7 @@ const CreateAccount = () => {
                     type="tel"
                     id="est_tel"
                     name="est_tel"
-                    placeholder="Enter your number"
+                    placeholder="Tel:+23782050213"
                     required
                   />
                 </div>
@@ -481,7 +441,7 @@ const CreateAccount = () => {
               </div>
             </div>
 
-            <button type="submit">Connexion</button>
+            <button type="submit">Create Your Account</button>
 
             <input
               onChange={handleMultipleChange}

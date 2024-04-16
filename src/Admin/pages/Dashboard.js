@@ -1,30 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AsideMenu from "../components/AsideMenu";
 import LiveOrder from "../components/LiveOrder";
 import icoChief from "../images/3D Food Icon by @OdafeUI.webp";
 import Bar from "../components/Bar";
 import menuItem from "../images/menuItem.webp";
+import { useNavigate } from "react-router-dom";
 
 import { connect } from "react-redux";
-import { increment, decrement, menuio } from "../../redux/action";
+import {
+  increment,
+  userconnection,
+  decrement,
+  menuio,
+} from "../../redux/action";
 
-const Dashboard = ({ count, isMenuActive, menuio, increment, decrement }) => {
+const Dashboard = ({
+  count,
+  USER_DATA,
+  userconnection,
+  isMenuActive,
+  menuio,
+  increment,
+  decrement,
+}) => {
 
+  console.log("USER_DATA", USER_DATA);
+  console.log(
+    "localStore CurrentUser",
+    JSON.parse(localStorage.getItem("CurrentUser"))
+  );
 
-
-  // const deleteColumn = (columnIndex) => {
-  //   const table = tableOrder.current;
-  //   // if (!table) return; // Si la référence n'est pas définie, arrêtez la fonction
-  //   for (let i = 0; i < table.rows.length; i++) {
-  //     table.rows[i].deleteCell(columnIndex);
-  //   }
-  // };
-
+ const userData =  JSON.parse(localStorage.getItem("CurrentUser"))
   return (
-    <main className="adminConnexion dashboard">
+    <main className="adminConnexion dashboard" >
       <div className="main_container dashboard_container topCorrect">
         <div className="app_container">
-          <AsideMenu ></AsideMenu>
+          <AsideMenu></AsideMenu>
 
           <section className="appSide">
             <div className="appSide__struct">
@@ -37,7 +48,7 @@ const Dashboard = ({ count, isMenuActive, menuio, increment, decrement }) => {
                   </div>
                   <div className="text">
                     <div className="t1">
-                      <span>Welcome</span>, John{" "}
+                      <span>Welcome</span>, {userData.user.USER_SUBNAME}{" "}
                       <svg
                         width={25}
                         height={24}
@@ -401,9 +412,7 @@ const Dashboard = ({ count, isMenuActive, menuio, increment, decrement }) => {
                 </div>
               </div>
 
-
-
-              <LiveOrder ></LiveOrder>
+              <LiveOrder></LiveOrder>
             </div>
           </section>
         </div>
@@ -415,12 +424,14 @@ const Dashboard = ({ count, isMenuActive, menuio, increment, decrement }) => {
 const mapStateToProps = (state) => ({
   count: state.count,
   isMenuActive: state.isMenuActive,
+  USER_DATA: state.USER_DATA,
 });
 
 const mapDispatchToProps = {
   increment,
   decrement,
   menuio,
+  userconnection,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

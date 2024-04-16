@@ -330,7 +330,7 @@ Venez donc au Friend's Food à Bonamoussadi dans Douala, et dégustez des grilla
             ></MenuItem>
             <MenuItem
               id="3"
-              nom="Grillade de porc épicée"
+              nom="Grillade de porc épicée Grillade de porc épicée Grillade de porc épicée"
               descr="Délicieux et pimentée, la grillade de porc épicé est un plat qui
             marie parfaitement la tendreté de la viande de porc avec une
             explosion de saveurs épicées. La combinaison de la grille et des

@@ -1,12 +1,155 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import AsideMenu from "../components/AsideMenu";
 import Bar from "../components/Bar";
 import { connect } from "react-redux";
 import { increment, decrement, menuio } from "../../redux/action";
 import ToggleBtn from "../components/ToggleBtn";
 // import BtnMain from "../components/BtnMain";
+import Swal from "sweetalert2";
+import { validatePhoneNumberAndCountry, getUserData } from "../../utils";
+import { createUser, userEstablishment } from "../API/api";
+import { useNavigate } from "react-router-dom";
 
 const Admin = () => {
+  const [filteredEstablishments, setFilteredEstablishments] = useState([]);
+  const CreateAdminForm = useRef(null);
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    name: "",
+    subname: "",
+    phone: "",
+    email: "",
+    password: "",
+    password_confirm: "",
+  });
+
+  
+  const stateUser = {
+    activer : 2,
+    desactiver : 3,
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const getUserByEstablishments = async () => {
+    try {
+     console.log( getUserData());
+      userEstablishment(getUserData().ESTABLISSEMENT.ESTABLISHMENT_ID).then(
+        (res) => {
+          if (res) {
+            setFilteredEstablishments(res.data);
+            console.log("res", res);
+          }
+        }
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validation des champs (ajoutez votre propre logique de validation)
+    if (
+      !formData.name ||
+      !formData.subname ||
+      !formData.phone ||
+      !formData.email ||
+      !formData.password ||
+      !formData.password_confirm
+    ) {
+      Swal.fire({
+        icon: "error",
+        title: "Erreur",
+        text: "Veuillez remplir tous les champs.",
+      });
+      return;
+    }
+
+    const isValidPhone = validatePhoneNumberAndCountry(formData.phone);
+    if (isValidPhone === null) {
+      Swal.fire({
+        icon: "error",
+        title: "Erreur",
+        text: "Numéro de téléphone invalide, préciser l'indicatif exemple :+237XXXXXXXXXX",
+      });
+      return;
+    }
+
+    if (formData.password !== formData.password_confirm) {
+      Swal.fire({
+        icon: "error",
+        title: "Erreur",
+        text: "Les mots de passe ne correspondent pas.",
+      });
+      return;
+    }
+
+    const FormDATA = new FormData(CreateAdminForm.current);
+    const newFormData = new FormData();
+    for (const [key, value] of FormDATA.entries()) {
+      switch (key) {
+        case "name":
+          newFormData.append("USER_NAME", value);
+          break;
+        case "subname":
+          newFormData.append("USER_SUBNAME", value);
+          break;
+        case "email":
+          newFormData.append("USER_EMAIL", value);
+          break;
+        case "phone":
+          newFormData.append("USER_TEL", value);
+          break;
+        case "password":
+          newFormData.append("USER_PASSWORD", value);
+          break;
+        default:
+          break;
+      }
+    }
+
+    console.log("getUserData() ---->", getUserData());
+    newFormData.append(
+      "ESTABLISHMENT_ID",
+      getUserData().ESTABLISSEMENT.ESTABLISHMENT_ID
+    );
+
+    createUser(newFormData).then( async (res) => {
+      if (res) {
+        console.log("res", res);
+        await getUserByEstablishments();
+      }
+    });
+  };
+
+
+
+  useEffect(() => {
+    const fetchUserByEstablishments = async () => {
+      try {
+       console.log( getUserData());
+        userEstablishment(getUserData().ESTABLISSEMENT.ESTABLISHMENT_ID).then(
+          (res) => {
+            if (res) {
+              setFilteredEstablishments(res.data);
+              console.log("res", res);
+            }
+          }
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUserByEstablishments();
+  }, []);
+
   return (
     <main className="adminConnexion dashboard CategoriesPage">
       <div className="main_container dashboard_container topCorrect">
@@ -42,119 +185,38 @@ const Admin = () => {
                           <tbody>
                             <tr className="thead">
                               <td>N°</td>
+                              <td>Admin Type</td>
+                              <td>Status</td>
                               <td>Name</td>
                               <td>Email</td>
-                              <td>Status</td>
-                              <td>create at</td>
+                              
                               <td>Actions</td>
                             </tr>
 
-                            <tr>
-                              <td>01</td>
-                              <td>John Doe</td>
-                              <td>florian.tchomga@gmail.com</td>
-                              <td>
-                                <ToggleBtn state={1}></ToggleBtn>
-                              </td>
+                            {filteredEstablishments.map((user) => (
+                              <tr key={user.USER_ID}>
+                                <td>{user.USER_ID}</td>
+                                <td>{user.USER_TYPE_NAME}</td>
+                                <td>
+                                { user.USER_TYPE === 2 ? <ToggleBtn id={user.USER_ID} state={user.USER_STATE=== stateUser.activer ? true : false} ></ToggleBtn> : ""}
+                                </td>
+                                <td>{user.USER_NAME} </td>
+                                <td>{user.USER_EMAIL}</td>
 
-                              <td>25 sept 2023</td>
-                              <td>
-                                {" "}
-                                <div className="btnAction">
-                                  <div className="btnAction__item btnAction--edit">
-                                    Edit
-                                  </div>
-                                  <div className="btnAction__item  btnAction--cancel">
-                                    Delete
-                                  </div>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>01</td>
-                              <td>John Doe</td>
-                              <td>florian.tchomga@gmail.com</td>
-                              <td>
-                                <ToggleBtn state={1}></ToggleBtn>
-                              </td>
+                                <td>{user.DATE}</td>
+                                <td>
+                                  <div className="btnAction">
+                                    <div className="btnAction__item btnAction--edit">
+                                      Edit
+                                    </div>
 
-                              <td>25 sept 2023</td>
-                              <td>
-                                {" "}
-                                <div className="btnAction">
-                                  <div className="btnAction__item btnAction--edit">
-                                    Edit
-                                  </div>
-                                  <div className="btnAction__item  btnAction--cancel">
-                                    Delete
-                                  </div>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>01</td>
-                              <td>John Doe</td>
-                              <td>florian.tchomga@gmail.com</td>
-                              <td>
-                                <ToggleBtn state={1}></ToggleBtn>
-                              </td>
+                                    { user.USER_TYPE === 2 ? <div className="btnAction__item btnAction--cancel">Delete</div> : ""}
 
-                              <td>25 sept 2023</td>
-                              <td>
-                                {" "}
-                                <div className="btnAction">
-                                  <div className="btnAction__item btnAction--edit">
-                                    Edit
+                                    
                                   </div>
-                                  <div className="btnAction__item  btnAction--cancel">
-                                    Delete
-                                  </div>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>01</td>
-                              <td>John Doe</td>
-                              <td>florian.tchomga@gmail.com</td>
-                              <td>
-                                <ToggleBtn state={1}></ToggleBtn>
-                              </td>
-
-                              <td>25 sept 2023</td>
-                              <td>
-                                {" "}
-                                <div className="btnAction">
-                                  <div className="btnAction__item btnAction--edit">
-                                    Edit
-                                  </div>
-                                  <div className="btnAction__item  btnAction--cancel">
-                                    Delete
-                                  </div>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>01</td>
-                              <td>John Doe</td>
-                              <td>florian.tchomga@gmail.com</td>
-                              <td>
-                                <ToggleBtn state={1}></ToggleBtn>
-                              </td>
-
-                              <td>25 sept 2023</td>
-                              <td>
-                                {" "}
-                                <div className="btnAction">
-                                  <div className="btnAction__item btnAction--edit">
-                                    Edit
-                                  </div>
-                                  <div className="btnAction__item  btnAction--cancel">
-                                    Delete
-                                  </div>
-                                </div>
-                              </td>
-                            </tr>
-
+                                </td>
+                              </tr>
+                            ))}
                           </tbody>
                         </table>
                       </div>
@@ -190,7 +252,11 @@ const Admin = () => {
                   </div>
 
                   <div className="contentForm createaccount">
-                    <form className="contentForm__struct  ">
+                    <form
+                      className="contentForm__struct"
+                      onSubmit={handleSubmit}
+                      ref={CreateAdminForm}
+                    >
                       <div className="head_statItem">
                         <span className="title">Add an administrator</span>
                         <div className="Pmargin"></div>
@@ -198,40 +264,78 @@ const Admin = () => {
                       <div className="FormAddMenu__struct">
                         <div className="inputContainter">
                           <div className="input">
-                            <label htmlFor="">
+                            <label htmlFor="name">
                               Name <sup>*</sup>
                             </label>
-                            <input type="text" placeholder="Enter name" />
+                            <input
+                              type="text"
+                              name="name"
+                              value={formData.name}
+                              onChange={handleChange}
+                              placeholder="Enter name"
+                            />
                           </div>
                           <div className="input">
-                            <label htmlFor="">
+                            <label htmlFor="subname">
+                              Subname <sup>*</sup>
+                            </label>
+                            <input
+                              type="text"
+                              name="subname"
+                              value={formData.subname}
+                              onChange={handleChange}
+                              placeholder="Enter your subname"
+                            />
+                          </div>
+                          <div className="input">
+                            <label htmlFor="phone">
+                              Phone <sup>*</sup>
+                            </label>
+                            <input
+                              type="tel"
+                              name="phone"
+                              value={formData.phone}
+                              onChange={handleChange}
+                              placeholder="+237xxxxxxxx (precise country indication)"
+                            />
+                          </div>
+                          <div className="input">
+                            <label htmlFor="email">
                               Email <sup>*</sup>
                             </label>
                             <input
-                              type="Email"
+                              type="email"
+                              name="email"
+                              value={formData.email}
+                              onChange={handleChange}
                               placeholder="Enter email"
                             />
                           </div>
                           <div className="input">
-                            <label htmlFor="">
+                            <label htmlFor="password">
                               Password <sup>*</sup>
                             </label>
                             <input
                               type="password"
+                              name="password"
+                              value={formData.password}
+                              onChange={handleChange}
                               placeholder="Enter password"
                             />
                           </div>
                           <div className="input">
-                            <label htmlFor="">
+                            <label htmlFor="password_confirm">
                               Confirm Password <sup>*</sup>
                             </label>
                             <input
                               type="password"
+                              name="password_confirm"
+                              value={formData.password_confirm}
+                              onChange={handleChange}
                               placeholder="Confirm password"
                             />
                           </div>
                         </div>
-
                         <button type="submit">Add Administrator</button>
                       </div>
                     </form>
