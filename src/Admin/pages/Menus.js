@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import AsideMenu from "../components/AsideMenu";
 import Bar from "../components/Bar";
 import { connect } from "react-redux";
 import { increment, decrement, menuio } from "../../redux/action";
 import BtnMain from "../components/BtnMain";
-import MenuImg from "../images/menuItem.webp";
 import ToggleBtn from "../components/ToggleBtn";
+import { getAllCategory, getAllArticlesByEstablishment,deleteArticle } from "../API/api";
+import { getUserData, formaterTimestamp } from "../../utils";
+
+import { NavLink } from "react-router-dom";
 
 // function ToggleBtn() {
 //   return (
@@ -22,6 +25,133 @@ import ToggleBtn from "../components/ToggleBtn";
 // }
 
 const Menus = () => {
+  const [categories, setCategory] = useState([]);
+  const [articles, setArticles] = useState([]);
+
+  const ActiveCategories = [];
+
+  const [fetchCategorieCalled, setFetchCategorieCalled] = useState(false);
+  const [fetchAllArticleByEstablishment, setFetchAllArticleByEstablishment] =
+    useState(false);
+
+  const establishmentID = getUserData().ESTABLISSEMENT.ESTABLISHMENT_ID;
+
+  const fetchCategorie = async () => {
+    try {
+      console.log("establishmentID", establishmentID);
+      getAllCategory(establishmentID).then((res) => {
+        if (res) {
+          setCategory(res.data);
+          console.log("res", res);
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const menusStatus = {
+    activer: 1,
+    desactiver: 0,
+  };
+
+  function displayArticles(articlesRES) {
+    let compteur = 0; // Counter for row numbering (optional)
+
+    return articlesRES.map((articleArray) =>
+      articleArray.map((temp) => (
+        <tr key={compteur++}>
+          {" "}
+          {/* Unique key for each row */}
+          <td>{compteur + 1}</td> {/* Row number */}
+          <td>
+            <div className="name_menu">
+              <div className="img">
+                {temp.imageBase64 && (
+                  <img src={temp.imageBase64} alt={temp.ARTICLE_NAME} />
+                )}
+              </div>
+              <div className="name">{temp.ARTICLE_NAME}</div>
+            </div>
+          </td>
+          <td>
+            <ToggleBtn
+              actionType="toggleMenu"
+              id={temp.ARTICLE_ID}
+              state={temp.ARTICLE_STATUS === 1}
+            />
+          </td>
+          <td>{temp.CATEGORY_NAME}</td>
+          <td>{temp.ARTICLE_PRICE} XAF</td>
+          <td>{temp.ARTICLE_PREPARE_TIME} min.</td>
+          <td>{temp.ARTICLE_VIEW} k</td>
+          <td>{formaterTimestamp(Number(temp.CREATEAT))}</td>
+          <td>
+            <div className="btnAction">
+              <NavLink
+                to={`./updatemenus?id=${temp.ARTICLE_ID}`}
+                className="btnAction__item btnAction--edit link"
+              >
+                Edit
+              </NavLink>
+              <div onClick={handleDelete}  articleid={temp.ARTICLE_ID} className="btnAction__item btnAction--cancel">Delete</div>
+            </div>
+          </td>
+        </tr>
+      ))
+    );
+  }
+
+  const handleDelete = async (e)=>{
+    const articleId = e.target.getAttribute("articleid");
+
+    const formData = new FormData();
+    formData.append("ID", articleId);
+  
+    deleteArticle(formData).then((res) => {
+      if (res) {
+        console.log(res);
+        fetchCategorie();
+      }
+    });
+  }
+
+  useEffect(() => {
+    const fetchCategorie_temp = async () => {
+      try {
+        console.log("establishmentID", establishmentID);
+        getAllCategory(establishmentID).then((res) => {
+          if (res) {
+            setCategory(res.data);
+            console.log("res", res);
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const getAllArticlesByEstablishment_temp = async () => {
+      try {
+        console.log("establishmentID", establishmentID);
+        getAllArticlesByEstablishment(establishmentID).then((res) => {
+          if (res) {
+            setArticles(res.data);
+            console.log("getAllArticlesByEstablishment", res);
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (!fetchCategorieCalled) {
+      fetchCategorie_temp();
+      getAllArticlesByEstablishment_temp();
+      setFetchCategorieCalled(true);
+    }
+  }, [fetchCategorieCalled, establishmentID]);
+
   return (
     <main className="adminConnexion dashboard ">
       <div className="main_container dashboard_container topCorrect">
@@ -37,8 +167,11 @@ const Menus = () => {
                     Here you can add, update or delete a meal
                   </div>
                 </div>
-    
-                <BtnMain to="/admin/app/menus/addmenus" text="+ Add a meal"></BtnMain>
+
+                <BtnMain
+                  to="/admin/app/menus/addmenus"
+                  text="+ Add a meal"
+                ></BtnMain>
               </div>
 
               <div className="section section4 sectionMenulist">
@@ -97,405 +230,48 @@ const Menus = () => {
                   <div id="scroll_categories" className="categories">
                     <div className="categories_container">
                       <div className="category active">Tout</div>
-                      <div className="category">Pizza</div>
-                      <div className="category">Burger</div>
-                      <div className="category">Boissons</div>
-                      <div className="category">Petit-Dejeuner</div>
-                      <div className="category">Patisserie</div>
-                      <div className="category">Diner</div>
-                      <div className="category">Grillades</div>
-                      <div className="category">Burger</div>
-                      <div className="category">Boissons</div>
-                      <div className="category">Petit-Dejeuner</div>
-                      <div className="category">Patisserie</div>
-                      <div className="category">Diner</div>
-                      <div className="category">Grillades</div>
-                      <div className="category">Burger</div>
-                      <div className="category">Boissons</div>
-                      <div className="category">Petit-Dejeuner</div>
-                      <div className="category">Patisserie</div>
-                      <div className="category">Diner</div>
-                      <div className="category">Grillades</div>
-                      <div className="category">Burger</div>
-                      <div className="category">Boissons</div>
-                      <div className="category">Petit-Dejeuner</div>
-                      <div className="category">Patisserie</div>
-                      <div className="category">Diner</div>
-                      <div className="category">Grillades</div>
-                      <div className="category">Burger</div>
-                      <div className="category">Boissons</div>
-                      <div className="category">Petit-Dejeuner</div>
-                      <div className="category">Patisserie</div>
-                      <div className="category">Diner</div>
-                      <div className="category">Grillades</div>
-                      <div className="category">Burger</div>
-                      <div className="category">Boissons</div>
-                      <div className="category">Petit-Dejeuner</div>
-                      <div className="category">Patisserie</div>
-                      <div className="category">Diner</div>
-                      <div className="category">Grillades</div>
+                      {categories.map((category, index) => {
+                        console.log(
+                          "CATEGORY_ID______________:",
+                          category.CATEGORY_ID
+                        );
+
+                        return category.CATEGORY_QTE > 0 &&
+                          category.CATEGORY_STATUS === 1 ? (
+                          <div key={index + 1} className="category">
+                            {category.CATEGORY_NAME} (
+                            {category.CATEGORY_QTE <= 9
+                              ? "0" + category.CATEGORY_QTE
+                              : category.CATEGORY_QTE}
+                            )
+                          </div>
+                        ) : (
+                          ""
+                        );
+                      })}
                     </div>
                   </div>
 
                   <div className="table_container">
                     <div className="table_container__innerContainer">
-                    <table className="table tableMenuList">
-                    <tbody>
-                      <tr className="thead">
-                        <td>Name</td>
-                        <td>Status</td>
-                        <td>Price</td>
-                        <td>Preparation</td>
-                        <td>Nber View</td>
-                        <td>Date de création</td>
-                        <td>Actions</td>
-                      </tr>
-
-                      <tr>
-                        <td>
-                          <div className="name_menu">
-                            <div className="img">
-                              <img src={MenuImg} alt="MenuImg" />
-                            </div>
-                            <div className="name">
-                              Grillades de porcs épicées
-                            </div>
-                          </div>
-                        </td>
-
-                        <td>
-                          <ToggleBtn state={false}></ToggleBtn>
-                        </td>
-                        <td>5000 XAF</td>
-                        <td>30 min.</td>
-                        <td>5248 k</td>
-                        <td>25 january 2024, 15h30</td>
-                        <td>
-                          {" "}
-                          <div className="btnAction">
-                            <div className="btnAction__item btnAction--edit">
-                              Edit
-                            </div>
-                            <div className="btnAction__item btnAction--view">
-                              View
-                            </div>
-                            <div className="btnAction__item  btnAction--cancel">
-                              Cancel
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div className="name_menu">
-                            <div className="img">
-                              <img src={MenuImg} alt="MenuImg" />
-                            </div>
-                            <div className="name">
-                              Grillades de porcs épicées
-                            </div>
-                          </div>
-                        </td>
-
-                        <td>
-                          <ToggleBtn state={true}></ToggleBtn>
-                        </td>
-                        <td>5000 XAF</td>
-                        <td>30 min.</td>
-                        <td>5248 k</td>
-                        <td>25 january 2024, 15h30</td>
-                        <td>
-                          {" "}
-                          <div className="btnAction">
-                            <div className="btnAction__item btnAction--edit">
-                              Edit
-                            </div>
-                            <div className="btnAction__item btnAction--view">
-                              View
-                            </div>
-                            <div className="btnAction__item  btnAction--cancel">
-                              Cancel
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div className="name_menu">
-                            <div className="img">
-                              <img src={MenuImg} alt="MenuImg" />
-                            </div>
-                            <div className="name">
-                              Grillades de porcs épicées
-                            </div>
-                          </div>
-                        </td>
-
-                        <td>
-                          <ToggleBtn state={false}></ToggleBtn>
-                        </td>
-                        <td>5000 XAF</td>
-                        <td>30 min.</td>
-                        <td>5248 k</td>
-                        <td>25 january 2024, 15h30</td>
-                        <td>
-                          {" "}
-                          <div className="btnAction">
-                            <div className="btnAction__item btnAction--edit">
-                              Edit
-                            </div>
-                            <div className="btnAction__item btnAction--view">
-                              View
-                            </div>
-                            <div className="btnAction__item  btnAction--cancel">
-                              Cancel
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div className="name_menu">
-                            <div className="img">
-                              <img src={MenuImg} alt="MenuImg" />
-                            </div>
-                            <div className="name">
-                              Grillades de porcs épicées
-                            </div>
-                          </div>
-                        </td>
-
-                        <td>
-                          <ToggleBtn state={true}></ToggleBtn>
-                        </td>
-                        <td>5000 XAF</td>
-                        <td>30 min.</td>
-                        <td>5248 k</td>
-                        <td>25 january 2024, 15h30</td>
-                        <td>
-                          {" "}
-                          <div className="btnAction">
-                            <div className="btnAction__item btnAction--edit">
-                              Edit
-                            </div>
-                            <div className="btnAction__item btnAction--view">
-                              View
-                            </div>
-                            <div className="btnAction__item  btnAction--cancel">
-                              Cancel
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div className="name_menu">
-                            <div className="img">
-                              <img src={MenuImg} alt="MenuImg" />
-                            </div>
-                            <div className="name">
-                              Grillades de porcs épicées
-                            </div>
-                          </div>
-                        </td>
-
-                        <td>
-                          <ToggleBtn state={false}></ToggleBtn>
-                        </td>
-                        <td>5000 XAF</td>
-                        <td>30 min.</td>
-                        <td>5248 k</td>
-                        <td>25 january 2024, 15h30</td>
-                        <td>
-                          {" "}
-                          <div className="btnAction">
-                            <div className="btnAction__item btnAction--edit">
-                              Edit
-                            </div>
-                            <div className="btnAction__item btnAction--view">
-                              View
-                            </div>
-                            <div className="btnAction__item  btnAction--cancel">
-                              Cancel
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div className="name_menu">
-                            <div className="img">
-                              <img src={MenuImg} alt="MenuImg" />
-                            </div>
-                            <div className="name">
-                              Grillades de porcs épicées
-                            </div>
-                          </div>
-                        </td>
-
-                        <td>
-                          <ToggleBtn state={true}></ToggleBtn>
-                        </td>
-                        <td>5000 XAF</td>
-                        <td>30 min.</td>
-                        <td>5248 k</td>
-                        <td>25 january 2024, 15h30</td>
-                        <td>
-                          {" "}
-                          <div className="btnAction">
-                            <div className="btnAction__item btnAction--edit">
-                              Edit
-                            </div>
-                            <div className="btnAction__item btnAction--view">
-                              View
-                            </div>
-                            <div className="btnAction__item  btnAction--cancel">
-                              Cancel
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div className="name_menu">
-                            <div className="img">
-                              <img src={MenuImg} alt="MenuImg" />
-                            </div>
-                            <div className="name">
-                              Grillades de porcs épicées
-                            </div>
-                          </div>
-                        </td>
-
-                        <td>
-                          <ToggleBtn state={true}></ToggleBtn>
-                        </td>
-                        <td>5000 XAF</td>
-                        <td>30 min.</td>
-                        <td>5248 k</td>
-                        <td>25 january 2024, 15h30</td>
-                        <td>
-                          {" "}
-                          <div className="btnAction">
-                            <div className="btnAction__item btnAction--edit">
-                              Edit
-                            </div>
-                            <div className="btnAction__item btnAction--view">
-                              View
-                            </div>
-                            <div className="btnAction__item  btnAction--cancel">
-                              Cancel
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div className="name_menu">
-                            <div className="img">
-                              <img src={MenuImg} alt="MenuImg" />
-                            </div>
-                            <div className="name">
-                              Grillades de porcs épicées
-                            </div>
-                          </div>
-                        </td>
-
-                        <td>
-                          <ToggleBtn state={true}></ToggleBtn>
-                        </td>
-                        <td>5000 XAF</td>
-                        <td>30 min.</td>
-                        <td>5248 k</td>
-                        <td>25 january 2024, 15h30</td>
-                        <td>
-                          {" "}
-                          <div className="btnAction">
-                            <div className="btnAction__item btnAction--edit">
-                              Edit
-                            </div>
-                            <div className="btnAction__item btnAction--view">
-                              View
-                            </div>
-                            <div className="btnAction__item  btnAction--cancel">
-                              Cancel
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div className="name_menu">
-                            <div className="img">
-                              <img src={MenuImg} alt="MenuImg" />
-                            </div>
-                            <div className="name">
-                              Grillades de porcs épicées
-                            </div>
-                          </div>
-                        </td>
-
-                        <td>
-                          <ToggleBtn state={true}></ToggleBtn>
-                        </td>
-                        <td>5000 XAF</td>
-                        <td>30 min.</td>
-                        <td>5248 k</td>
-                        <td>25 january 2024, 15h30</td>
-                        <td>
-                          {" "}
-                          <div className="btnAction">
-                            <div className="btnAction__item btnAction--edit">
-                              Edit
-                            </div>
-                            <div className="btnAction__item btnAction--view">
-                              View
-                            </div>
-                            <div className="btnAction__item  btnAction--cancel">
-                              Cancel
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <div className="name_menu">
-                            <div className="img">
-                              <img src={MenuImg} alt="MenuImg" />
-                            </div>
-                            <div className="name">
-                              Grillades de porcs épicées
-                            </div>
-                          </div>
-                        </td>
-
-                        <td>
-                          <ToggleBtn></ToggleBtn>
-                        </td>
-                        <td>5000 XAF</td>
-                        <td>30 min.</td>
-                        <td>5248 k</td>
-                        <td>25 january 2024, 15h30</td>
-                        <td>
-                          {" "}
-                          <div className="btnAction">
-                            <div className="btnAction__item btnAction--edit">
-                              Edit
-                            </div>
-                            <div className="btnAction__item btnAction--view">
-                              View
-                            </div>
-                            <div className="btnAction__item  btnAction--cancel">
-                              Cancel
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                      <table className="table tableMenuList">
+                        <tbody>
+                          <tr className="thead">
+                            <td>N°</td>
+                            <td>Name</td>
+                            <td>Status</td>
+                            <td>Category</td>
+                            <td>Price</td>
+                            <td>Preparation</td>
+                            <td>Nber View</td>
+                            <td>Date de création</td>
+                            <td>Actions</td>
+                          </tr>
+                          {displayArticles(articles)}
+                        </tbody>
+                      </table>
                     </div>
                   </div>
-
 
                   <div className="actionbtn">
                     {" "}

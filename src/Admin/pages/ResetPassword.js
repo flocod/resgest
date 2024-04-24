@@ -48,7 +48,7 @@ const ResetPassword = () => {
                 <label htmlFor="">
                   Your email <sup> *</sup>
                 </label>
-                <input type="email" placeholder="example@gmail.com" />
+                <input required type="email" placeholder="example@gmail.com" />
               </div>
             </div>
             <button type="submit">Connexion</button>

@@ -3,14 +3,16 @@ import AsideMenu from "../components/AsideMenu";
 import Bar from "../components/Bar";
 import { connect } from "react-redux";
 import { increment, decrement, menuio } from "../../redux/action";
-import { createArticle, getAllCategory } from "../API/api";
+import { updateArticle, getAllCategory, getArticleById } from "../API/api";
 import { getUserData,isEmpty } from "../../utils";
+
 import Swal from "sweetalert2";
 
-const AddMenus = () => {
+const UpdateMenus = () => {
   const [selectedInputFile, setSelectedInputFile] = useState("");
   const [categories, setCategory] = useState([]);
   const [fetchCategorieCalled, setFetchCategorieCalled] = useState(false);
+  let currentCategoryID = "";
 
   let image1 = useRef();
   let image2 = useRef();
@@ -49,29 +51,61 @@ const AddMenus = () => {
     setSelectedInputFile("coverIMG");
   };
 
+  function isEmptyField(data,message) {
+    Object.getOwnPropertyNames(data).forEach((elt) => {
+      if (isEmpty(data[elt]) && elt !== "files") {
+        Swal.fire({
+          icon: "error",
+          title: "Erreur",
+          text: `${message}`,
+        });
+      }
+    });
+  }
+
   const [formData, setFormData] = useState({
+    CATEGORY_NAME: "",
+    CATEGORY_DESCRIPTION: "",
     mealName: "",
     price: "",
-    category: "breakfast",
+    category: "",
     preparationTime: "",
     description: "",
-    imageFile: null,
+    imageFile1: "",
+    imageFile2: "",
   });
-
+  const [url, setUrl] = useState(window.location.href);
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
+
     setFormData({
       ...formData,
       [name]: value,
     });
-
-
   };
 
+  const getIdParamFromURL = (url) => {
+    try {
+      const urlParams = new URLSearchParams(url);
+      const params = {};
 
+      // Parcourir tous les paramètres de l'URL et les stocker dans un objet
+      for (const [key, value] of urlParams) {
+        console.log("key, value :", key, value);
+        if (key) {
+          params["id"] = value;
+        }
+      }
 
-
+      return params.id;
+    } catch (error) {
+      console.error(
+        "Une erreur s'est produite lors de l'extraction des paramètres de l'URL:",
+        error.message
+      );
+      return {};
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -80,10 +114,12 @@ const AddMenus = () => {
 
     console.log("form", form);
 
+
     const formDataToSend = new FormData(form);
 
     const newFormData = new FormData();
     newFormData.append("ESTABLISHMENT_ID", establishmentID);
+    newFormData.append("ARTICLE_ID", getIdParamFromURL(url));
     for (const [key, value] of formDataToSend.entries()) {
       switch (key) {
         case "mealName":
@@ -111,10 +147,9 @@ const AddMenus = () => {
         default:
           break;
       }
-      
     }
 
-    createArticle(newFormData).then((resp) => {
+    updateArticle(newFormData).then((resp) => {
       if (resp) {
         console.log(resp);
       }
@@ -147,8 +182,35 @@ const AddMenus = () => {
       }
     };
 
+    const fetchArticle = async (id) => {
+      try {
+        getArticleById(id).then((res) => {
+          if (res) {
+            console.log("res", res);
+
+            setFormData({
+              CATEGORY_NAME: res.data.CATEGORY_NAME,
+              CATEGORY_DESCRIPTION: res.data.CATEGORY_DESCRIPTION,
+              mealName: res.data.ARTICLE_NAME,
+              price: res.data.ARTICLE_PRICE,
+              category: res.data.ARTICLE_CATEGORY,
+              preparationTime: res.data.ARTICLE_PREPARE_TIME,
+              description: res.data.ARTICLE_DESCRIPTION,
+              imageFile1: res.data.ARTICLE_IMG_1,
+              imageFile2: res.data.ARTICLE_IMG_2,
+            });
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     if (!fetchCategorieCalled) {
       fetchCategorie_temp();
+      const articleid = getIdParamFromURL(url);
+      console.log(articleid);
+      fetchArticle(articleid);
       setFetchCategorieCalled(true);
     }
   }, [fetchCategorieCalled, establishmentID]);
@@ -164,10 +226,8 @@ const AddMenus = () => {
               <Bar></Bar>
               <div className="titlePage">
                 <div className="text">
-                  <div className="t1">Add Meal</div>
-                  <div className="t2">
-                    Here you can add, update or delete a menu
-                  </div>
+                  <div className="t1">Update Article</div>
+                  <div className="t2">Update this form</div>
                 </div>
               </div>
               <div className="contentForm createaccount">
@@ -179,7 +239,7 @@ const AddMenus = () => {
                   <div className="FormAddMenu__struct">
                     <div className="flexContainer inputMargin">
                       <div
-                        className="inputContainter inputMargin"
+                        className="inputContainter "
                         onClick={handleClickCover_btn}
                       >
                         <div className="input inputFile">
@@ -188,8 +248,13 @@ const AddMenus = () => {
                           </label>
                           <div className="image">
                             <img
+                              style={
+                                formData.imageFile2
+                                  ? { opacity: 1 }
+                                  : { opacity: 0 }
+                              }
                               className="coverIMG"
-                              src=""
+                              src={formData.imageFile2}
                               alt="couverture du restaurant"
                             />
                             <svg
@@ -227,7 +292,7 @@ const AddMenus = () => {
                       </div>
 
                       <div
-                        className="inputContainter inputMargin"
+                        className="inputContainter"
                         onClick={handleClickLogo_btn}
                       >
                         <div className="input inputFile">
@@ -236,8 +301,13 @@ const AddMenus = () => {
                           </label>
                           <div className="image">
                             <img
+                              style={
+                                formData.imageFile1
+                                  ? { opacity: 1 }
+                                  : { opacity: 0 }
+                              }
                               className="logoIMG"
-                              src=""
+                              src={formData.imageFile1}
                               alt="Logo du restaurant"
                             />
                             <svg
@@ -275,7 +345,7 @@ const AddMenus = () => {
                       </div>
                     </div>
 
-                    <div className="flexContainer inputMargin">
+                    <div className="flexContainer">
                       <div className="inputContainter ">
                         <div className="input">
                           <label htmlFor="mealName">
@@ -317,14 +387,31 @@ const AddMenus = () => {
                             id="category"
                           >
                             {categories.map((category, index) => {
-                              return (
-                                <option
-                                  key={index}
-                                  value={category.CATEGORY_ID}
-                                >
-                                  {category.CATEGORY_NAME}
-                                </option>
-                              );
+
+                              const currentCategoryID = formData.category;
+                              console.log("currentCategoryID",currentCategoryID)
+                              if (category.CATEGORY_ID === currentCategoryID) {
+                             
+                                return (
+                                  <option
+                                    key={index}
+                                    value={category.CATEGORY_ID}
+                                    aria-checked={true}
+                                  >
+                                    {category.CATEGORY_NAME}
+                                  </option>
+                                );
+                              } else {
+                              
+                                return (
+                                  <option
+                                    key={index}
+                                    value={category.CATEGORY_ID}
+                                  >
+                                    {category.CATEGORY_NAME}
+                                  </option>
+                                );
+                              }
                             })}
                           </select>
                         </div>
@@ -361,7 +448,7 @@ const AddMenus = () => {
                       </div>
                     </div>
 
-                    <button type="submit">Add Meal</button>
+                    <button type="submit">Update Article</button>
 
                     <input
                       onChange={handleChangeInputFileImage}
@@ -399,4 +486,4 @@ const mapDispatchToProps = {
   menuio,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddMenus);
+export default connect(mapStateToProps, mapDispatchToProps)(UpdateMenus);

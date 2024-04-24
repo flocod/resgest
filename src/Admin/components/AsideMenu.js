@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import logResto from "../images/logoResto.webp";
+import logResto from "../images/logo.png";
 import imgQR from "../images/qr.webp";
 import { connect } from "react-redux";
 import { increment, decrement, menuio } from "../../redux/action";
-
+import { getUserData } from "../../utils";
+import { fileDownload, fn_downloadAndCacheImage } from "../API/api";
+import { endpoints } from "../API/EndPoints";
 const icoHome = (
   <svg
     width={22}
@@ -267,32 +269,114 @@ const icoParametre = (
   </svg>
 );
 
-const navItems = [
-  { path: "/admin/app/dashboard", label: "Dashboard", ico: icoHome },
-  { path: "/admin/app/orders", label: "Orders", ico: icoOrder },
-  { path: "/admin/app/menus", label: "Menus", ico: icoMenus },
-  { path: "/admin/app/categories", label: "Categories", ico: icoCatego },
-  { path: "/admin/app/sales", label: "Sales", ico: icoVente },
-  // { path: "/admin/app/statistiques", label: "Statistiques", ico: icoStat },
-  { path: "/admin/app/admin", label: "Admins", ico: icoAdmin },
-  { path: "/admin/app/settings", label: "Settings", ico: icoParametre },
-];
+const userData = getUserData() || 0;
+const isAdmin =
+  userData && userData.user && userData.user.USER_TYPE
+    ? userData.user.USER_TYPE && userData.user.USER_TYPE === 1
+      ? true
+      : false
+    : false;
 
-const AsideMenu = ({ isMenuActive }) => {
+const navItems = isAdmin
+  ? [
+      { path: "/admin/app/dashboard", label: "Dashboard", ico: icoHome },
+      { path: "/admin/app/orders", label: "Orders", ico: icoOrder },
+      { path: "/admin/app/menus", label: "Menus", ico: icoMenus },
+      { path: "/admin/app/categories", label: "Categories", ico: icoCatego },
+      { path: "/admin/app/sales", label: "Sales", ico: icoVente },
+      // { path: "/admin/app/statistiques", label: "Statistiques", ico: icoStat },
+      { path: "/admin/app/admin", label: "Admins", ico: icoAdmin },
+      { path: "/admin/app/settings", label: "Settings", ico: icoParametre },
+    ]
+  : [
+      { path: "/admin/app/dashboard", label: "Dashboard", ico: icoHome },
+      { path: "/admin/app/orders", label: "Orders", ico: icoOrder },
+      { path: "/admin/app/menus", label: "Menus", ico: icoMenus },
+      { path: "/admin/app/categories", label: "Categories", ico: icoCatego },
+      { path: "/admin/app/sales", label: "Sales", ico: icoVente },
+      // { path: "/admin/app/statistiques", label: "Statistiques", ico: icoStat },
+      { path: "/admin/app/settings", label: "Settings", ico: icoParametre },
+    ];
+
+const AsideMenu = ({ menuio, isMenuActive }) => {
+  // const [logo, setLogo] = useState();
+  // const establishmentLOGO = getUserData().ESTABLISSEMENT.ESTABLISHMENT_LOGO;
+
+  // const fileInf = {
+  //   path: establishmentLOGO,
+  // };
+  // const getFile = async () => {
+  //   fileDownload(fileInf).then((res) => {
+  //     if (res) {
+  //       console.log(res);
+  //       setLogo(res.data);
+  //     }
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   const getFile_temp = async () => {
+  //     console.log("jbkbjbjbbbbbbbbbbbbbb");
+
+  //     try {
+  //       const establishmentLOGO = getUserData().ESTABLISSEMENT.ESTABLISHMENT_LOGO;
+  //       fileDownload(establishmentLOGO,"thumbnail").then((url)=>{
+  //         if(url){
+  //           console.log("url", url);
+  //           setLogo(url);
+  //           localStorage.setItem("LOGO",logo)
+  //         }
+  //       });
+
+  //     } catch (error) {
+  //       console.error(
+  //         "Une erreur s'est produite lors du téléchargement du fichier :",
+  //         error
+  //       );
+  //     }
+  //   };
+  //  getFile_temp();
+  // }, [establishmentLOGO]);
+
+  const [imageUrl, setImageUrl] = useState(null);
+
+  const handleClickNavItem = ()=>{
+   if(window.innerWidth <=750){
+    menuio();
+   }
+  }
+
+
+  useEffect(() => {
+    // Fetch logo from external source (replace with your actual logic)
+    fetch(
+      endpoints.public.fileDownload +
+        `?path=${
+          getUserData().ESTABLISSEMENT.ESTABLISHMENT_LOGO
+        }&type=thumbnail`
+    )
+      .then((response) => response.blob())
+      .then((blob) => {
+        const reader = new FileReader();
+        reader.onloadend = () => setImageUrl(reader.result);
+        reader.readAsDataURL(blob);
+      })
+      .catch((error) => console.error("Error fetching logo:", error));
+  }, []);
+
   return (
     <div className={`asideMenu ${isMenuActive ? "activeMenuMob" : ""}`}>
       <div className="asideMenu__struct">
         <div className="logoResto">
-          <img src={logResto} alt={logResto} />
+          <img style={imageUrl ? {opacity: 1, transform:"rotate(2turn) scale(1)"} : {opacity: 0,transform:"rotate(1turn) scale(2)"}} src={imageUrl} alt={logResto} />
         </div>
 
         <nav className="menuLink">
           {navItems.map(function (item, index) {
             return (
-              <NavLink key={index} to={item.path} className={"menu_item link"}>
+              <NavLink onClick={handleClickNavItem} key={index} to={item.path} className={"menu_item link"}>
                 <div className="menu_item__struct">
                   {item.ico}
-
                   <span className="text">{item.label}</span>
                 </div>
               </NavLink>

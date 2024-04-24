@@ -1,10 +1,11 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import AsideMenu from "../components/AsideMenu";
 import Bar from "../components/Bar";
 import { connect } from "react-redux";
 import { increment, decrement, menuio } from "../../redux/action";
 // import BtnMain from "../components/BtnMain";
-
+import { getEstablishment } from "../API/api";
+import { getUserData } from "../../utils";
 function Day(props) {
   const [isChecked, setIsChecked] = useState(props.isChecked || false); // Initialize isChecked based on props or default to false
 
@@ -52,6 +53,18 @@ const Settings = () => {
 
   const [isPasswordHide, setPasswordHide] = useState(false);
   const [selectedInputFile, setSelectedInputFile] = useState("");
+  const [isEstFetch, setIsEstFetch] = useState(false);
+  const [formData, setFormData] = useState({
+    user_email: "",
+    est_email: "",
+    est_name: "",
+    est_phone: "",
+    est_location: "",
+    est_location_link: "",
+    est_description: "",
+    est_logo: "",
+    est_cover: "",
+  });
 
   let logo_input = useRef();
   let cover_input = useRef();
@@ -67,6 +80,16 @@ const Settings = () => {
     }
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+
   const handleChangeInputFileImage = (evt) => {
     evt.stopPropagation();
     let picImg = document.querySelector(`.${selectedInputFile}`);
@@ -80,6 +103,13 @@ const Settings = () => {
         picImg.classList.add("active");
       }
     }
+
+    const { name} = evt.target;
+    setFormData({
+      ...formData,
+      [name]: evt.target.files[0],
+    });
+
   };
 
   const handleClickLogo_btn = () => {
@@ -91,6 +121,46 @@ const Settings = () => {
     cover_input.current.click();
     setSelectedInputFile("coverIMG");
   };
+
+  const fn_getEstablishment = async () => {
+    console.log("res fefef -------------------")
+    try {
+     console.log( getUserData());
+      getEstablishment(getUserData().ESTABLISSEMENT.ESTABLISHMENT_ID).then(
+        (res) => {
+          if (res) {
+            console.log("res fefef -------------------",res)
+            setFormData({
+              user_email: getUserData().user.USER_EMAIL,
+              est_email: res.data.ESTABLISHMENT_EMAIL,
+              est_name: res.data.ESTABLISHMENT_NAME,
+              est_phone: res.data.ESTABLISHMENT_PHONE,
+              est_location: res.data.ESTABLISHMENT_LOCATION,
+              est_location_link: res.data.ESTABLISHMENT_LOCATION_LINK,
+              est_description: res.data.ESTABLISHMENT_DESCRIPTION,
+              est_logo: res.data.ESTABLISHMENT_LOGO,
+              est_cover: res.data.ESTABLISHMENT_COVER,
+            })
+            console.log("res", res);
+          }
+        }
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+  useEffect(() => {
+
+    if (!isEstFetch) {
+      fn_getEstablishment();
+      setIsEstFetch(true);
+    }
+   
+
+  }, [isEstFetch]);
+
 
   return (
     <main className="adminConnexion dashboard AddMenu SettingsPage">
@@ -113,7 +183,7 @@ const Settings = () => {
                 <div className="contentForm createaccount">
                   <form className="contentForm__struct">
                     <div className="head_statItem">
-                      <span className="title">Categories List</span>
+                      <span className="title">Establishment configuration</span>
                       <div className="Pmargin"></div>
                     </div>
 
@@ -123,19 +193,19 @@ const Settings = () => {
                           <label htmlFor="">
                             Your email <sup>*</sup>
                           </label>
-                          <input type="email" placeholder="example@gmail.com" />
+                          <input onChange={handleChange} name="user_email" value={formData.user_email} type="email" placeholder="example@gmail.com" />
                         </div>
                         <div className="input">
                           <label htmlFor="">
                             Restaurant Phone Number <sup>*</sup>
                           </label>
-                          <input type="tel" placeholder="Enter your number" />
+                          <input  onChange={handleChange} name="est_phone" value={formData.est_phone} type="tel" placeholder="Enter your number" />
                         </div>
                         <div className="input">
                           <label htmlFor="">
                             Restaurant Location <sup>*</sup>
                           </label>
-                          <input type="tel" placeholder="Enter your Location" />
+                          <input  onChange={handleChange} name="est_location" value={formData.est_location} type="tel" placeholder="Enter your Location" />
                         </div>
                       </div>
 
@@ -145,8 +215,10 @@ const Settings = () => {
                             Restaurant Name <sup>*</sup>
                           </label>
                           <input
+                           onChange={handleChange}
                             type="text"
                             placeholder="Your restaurant name"
+                            name="est_name" value={formData.est_name}
                           />
                         </div>
                         <div className="input">
@@ -154,8 +226,10 @@ const Settings = () => {
                             Restaurant Location link <sup>*</sup>
                           </label>
                           <input
+                           onChange={handleChange}
                             type="text"
                             placeholder="https://map.google.com/"
+                            name="est_location_link" value={formData.est_location_link}
                           />
                         </div>
                         <div className="input">
@@ -163,31 +237,34 @@ const Settings = () => {
                             Restaurant Email <sup>*</sup>
                           </label>
                           <input
+                           onChange={handleChange}
                             type="Email"
                             placeholder="Your restaurant email"
+                            name="est_email" value={formData.est_email}
                           />
                         </div>
                       </div>
                     </div>
 
-                    <div className="inputContainter">
+                    <div className="inputContainter inputMargin">
                       <div className="input inputTextarea">
                         <label htmlFor="">
                           Restaurant Description <sup>*</sup>
                         </label>
                         <textarea
-                          name=""
+                           onChange={handleChange}
                           id=""
                           cols="20"
                           rows="4"
                           placeholder="Enter your Restaurant description"
+                          name="est_description" value={formData.est_description}
                         ></textarea>
                       </div>
                     </div>
 
-                    <div className="flexContainer">
+                    <div className="flexContainer ">
                       <div
-                        className="inputContainter"
+                        className="inputContainter inputMargin"
                         onClick={handleClickCover_btn}
                       >
                         <div className="input inputFile">
@@ -196,9 +273,15 @@ const Settings = () => {
                           </label>
                           <div className="image">
                             <img
+                            style={
+                                formData.est_cover
+                                  ? { opacity: 1 }
+                                  : { opacity: 0 }
+                              }
                               className="coverIMG"
-                              src=""
+                              src={formData.est_cover}
                               alt="couverture du restaurant"
+
                             />
                             <svg
                               width={28}
@@ -235,7 +318,7 @@ const Settings = () => {
                       </div>
 
                       <div
-                        className="inputContainter"
+                        className="inputContainter inputMargin"
                         onClick={handleClickLogo_btn}
                       >
                         <div className="input inputFile">
@@ -244,9 +327,15 @@ const Settings = () => {
                           </label>
                           <div className="image">
                             <img
+                             style={
+                                formData.est_logo
+                                  ? { opacity: 1 }
+                                  : { opacity: 0 }
+                              }
                               className="logoIMG"
-                              src=""
+                              src={formData.est_logo}
                               alt="Logo du restaurant"
+
                             />
                             <svg
                               width={28}

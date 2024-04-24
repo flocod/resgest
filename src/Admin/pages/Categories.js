@@ -1,12 +1,120 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import AsideMenu from "../components/AsideMenu";
 import Bar from "../components/Bar";
 import { connect } from "react-redux";
 import { increment, decrement, menuio } from "../../redux/action";
 import ToggleBtn from "../components/ToggleBtn";
 // import BtnMain from "../components/BtnMain";
+import Swal from "sweetalert2";
+import { createCategory, getAllCategory,deleteCategory } from "../API/api";
+import { formaterTimestamp } from "../../utils";
+import { NavLink } from "react-router-dom";
+import { getUserData } from "../../utils";
 
 const Categories = () => {
+  const [formData, setFormData] = useState({
+    categoryName: "",
+    description: "",
+  });
+
+  const [categories, setCategory] = useState([]);
+  const [fetchCategorieCalled, setFetchCategorieCalled] = useState(false);
+
+  const establishmentID= getUserData().ESTABLISSEMENT.ESTABLISHMENT_ID;
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const fetchCategorie = async () => {
+    try {
+      console.log("establishmentID",establishmentID)
+      getAllCategory(establishmentID).then((res) => {
+        if (res) {
+          setCategory(res.data);
+          console.log("res", res);
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const { categoryName, description } = formData;
+    console.log("formData ========>", formData);
+    // Validation des champs
+    if (!categoryName || !description) {
+      Swal.fire({
+        icon: "error",
+        title: "Erreur",
+        text: "Veuillez remplir tous les champs",
+      });
+      return;
+    }
+
+    // Envoi des données via fetch et FormData
+    const data = new FormData();
+    data.append("CATEGORY_NAME", categoryName);
+    data.append("CATEGORY_DESCRIPTION", description);
+    data.append("ESTABLISHMENT_ID", establishmentID);
+    console.log(
+      "data To send ========>",
+      data.forEach((e) => console.log(e))
+    );
+
+    createCategory(data).then((resp) => {
+      if (resp) {
+        setFormData({ categoryName: "", description: "" });
+        fetchCategorie();
+        console.log(resp);
+      }
+    });
+  };
+
+
+  const handleDelete = async (e)=>{
+    const categoryId = e.target.getAttribute("categoryid");
+
+    const formData = new FormData();
+    formData.append("ID", categoryId);
+  
+    deleteCategory(formData).then((res) => {
+      if (res) {
+        console.log(res);
+        fetchCategorie();
+      }
+    });
+  }
+
+  const categoryStatus = {
+    activer: 1,
+    desactiver: 0,
+  };
+
+  useEffect(() => {
+
+    const fetchCategorie_temp = async () => {
+      try {
+        console.log("establishmentID",establishmentID)
+        getAllCategory(establishmentID).then((res) => {
+          if (res) {
+            setCategory(res.data);
+            console.log("res", res);
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (!fetchCategorieCalled) {
+      fetchCategorie_temp();
+      setFetchCategorieCalled(true);
+    }
+  },[fetchCategorieCalled,establishmentID]);
+
   return (
     <main className="adminConnexion dashboard CategoriesPage">
       <div className="main_container dashboard_container topCorrect">
@@ -50,153 +158,58 @@ const Categories = () => {
                               <td>Actions</td>
                             </tr>
 
-                            <tr>
-                              <td>01</td>
-                              <td>Grillades</td>
-                              <td>
-                                <ToggleBtn state={1}></ToggleBtn>
-                              </td>
-                              <td>12</td>
-                              <td>Contient toutes les grillades</td>
-                              <td>25 sept 2023</td>
-                              <td>
-                                {" "}
-                                <div className="btnAction">
-                                  <div className="btnAction__item btnAction--edit">
-                                    Edit
-                                  </div>
-                                  <div className="btnAction__item  btnAction--cancel">
-                                    Delete
-                                  </div>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>01</td>
-                              <td>Grillades</td>
-                              <td>
-                                <ToggleBtn state={1}></ToggleBtn>
-                              </td>
-                              <td>12</td>
-                              <td>Contient toutes les grillades</td>
-                              <td>25 sept 2023</td>
-                              <td>
-                                {" "}
-                                <div className="btnAction">
-                                  <div className="btnAction__item btnAction--edit">
-                                    Edit
-                                  </div>
-                                  <div className="btnAction__item  btnAction--cancel">
-                                    Delete
-                                  </div>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>01</td>
-                              <td>Grillades</td>
-                              <td>
-                                <ToggleBtn state={1}></ToggleBtn>
-                              </td>
-                              <td>12</td>
-                              <td>Contient toutes les grillades</td>
-                              <td>25 sept 2023</td>
-                              <td>
-                                {" "}
-                                <div className="btnAction">
-                                  <div className="btnAction__item btnAction--edit">
-                                    Edit
-                                  </div>
-                                  <div className="btnAction__item  btnAction--cancel">
-                                    Delete
-                                  </div>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>01</td>
-                              <td>Grillades</td>
-                              <td>
-                                <ToggleBtn state={1}></ToggleBtn>
-                              </td>
-                              <td>12</td>
-                              <td>Contient toutes les grillades</td>
-                              <td>25 sept 2023</td>
-                              <td>
-                                {" "}
-                                <div className="btnAction">
-                                  <div className="btnAction__item btnAction--edit">
-                                    Edit
-                                  </div>
-                                  <div className="btnAction__item  btnAction--cancel">
-                                    Delete
-                                  </div>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>01</td>
-                              <td>Grillades</td>
-                              <td>
-                                <ToggleBtn state={1}></ToggleBtn>
-                              </td>
-                              <td>12</td>
-                              <td>Contient toutes les grillades</td>
-                              <td>25 sept 2023</td>
-                              <td>
-                                {" "}
-                                <div className="btnAction">
-                                  <div className="btnAction__item btnAction--edit">
-                                    Edit
-                                  </div>
-                                  <div className="btnAction__item  btnAction--cancel">
-                                    Delete
-                                  </div>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>01</td>
-                              <td>Grillades</td>
-                              <td>
-                                <ToggleBtn state={1}></ToggleBtn>
-                              </td>
-                              <td>12</td>
-                              <td>Contient toutes les grillades</td>
-                              <td>25 sept 2023</td>
-                              <td>
-                                {" "}
-                                <div className="btnAction">
-                                  <div className="btnAction__item btnAction--edit">
-                                    Edit
-                                  </div>
-                                  <div className="btnAction__item  btnAction--cancel">
-                                    Delete
-                                  </div>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>01</td>
-                              <td>Grillades</td>
-                              <td>
-                                <ToggleBtn state={1}></ToggleBtn>
-                              </td>
-                              <td>12</td>
-                              <td>Contient toutes les grillades</td>
-                              <td>25 sept 2023</td>
-                              <td>
-                                {" "}
-                                <div className="btnAction">
-                                  <div className="btnAction__item btnAction--edit">
-                                    Edit
-                                  </div>
-                                  <div className="btnAction__item  btnAction--cancel">
-                                    Delete
-                                  </div>
-                                </div>
-                              </td>
-                            </tr>
+                            {categories.map((category, index) => {
+                              console.log("CATEGORY_ID______________:",category.CATEGORY_ID)
+                              return (
+                                <tr key={index}>
+                                  <td>{index + 1}</td>
+                                  <td>{category.CATEGORY_NAME}</td>
+                                  <td>
+                                    <ToggleBtn
+                                      actionType={"toggleCategory"}
+                                      id={category.CATEGORY_ID}
+                                      state={
+                                        category.CATEGORY_STATUS ===
+                                        categoryStatus.activer
+                                          ? true
+                                          : false
+                                      }
+                                    ></ToggleBtn>
+                                  </td>
+                                  <td>{category.CATEGORY_QTE}</td>
+                                  <td>{category.CATEGORY_DESCRIPTION}</td>
+                                  <td>
+                                    {formaterTimestamp(
+                                      Number(category.CREATEAT)
+                                    )}
+                                  </td>
+                                  <td>
+                                    {" "}
+                                    <div className="btnAction">
+                                      <NavLink
+                                      to={`./updatecategory?id=${category.CATEGORY_ID}`}
+                                        categoryid={category.CATEGORY_ID}
+                                        className="btnAction__item btnAction--edit link"
+                                      >
+                                        Edit
+                                      </NavLink>
+
+                                      {category.CATEGORY_QTE >= 1 ? (
+                                        ""
+                                      ) : (
+                                        <div
+                                        onClick={handleDelete}
+                                          categoryid={category.CATEGORY_ID}
+                                          className="btnAction__item  btnAction--cancel"
+                                        >
+                                          Delete
+                                        </div>
+                                      )}
+                                    </div>
+                                  </td>
+                                </tr>
+                              );
+                            })}
                           </tbody>
                         </table>
                       </div>
@@ -232,7 +245,10 @@ const Categories = () => {
                   </div>
 
                   <div className="contentForm createaccount">
-                    <form className="contentForm__struct  ">
+                    <form
+                      className="contentForm__struct"
+                      onSubmit={handleSubmit}
+                    >
                       <div className="head_statItem">
                         <span className="title">Add a meal Category</span>
                         <div className="Pmargin"></div>
@@ -240,25 +256,31 @@ const Categories = () => {
                       <div className="FormAddMenu__struct">
                         <div className="inputContainter">
                           <div className="input">
-                            <label htmlFor="">
-                              Meal Name <sup>*</sup>
+                            <label htmlFor="categoryName">
+                              Category Name <sup>*</sup>
                             </label>
                             <input
                               type="text"
-                              placeholder="Enter a meal name"
+                              name="categoryName"
+                              id="categoryName"
+                              value={formData.categoryName}
+                              onChange={handleChange}
+                              placeholder="Enter a category name"
                             />
                           </div>
 
                           <div className="input inputTextarea">
-                            <label htmlFor="">
+                            <label htmlFor="description">
                               Description<sup>*</sup>
                             </label>
                             <textarea
-                              name=""
-                              id=""
+                              name="description"
+                              id="description"
+                              value={formData.description}
+                              onChange={handleChange}
                               cols="20"
                               rows="4"
-                              placeholder="Enter a Meal description"
+                              placeholder="Enter a category description"
                             ></textarea>
                           </div>
                         </div>

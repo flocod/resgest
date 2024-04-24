@@ -111,7 +111,7 @@ Venez donc au Friend's Food à Bonamoussadi dans Douala, et dégustez des grilla
           <div className="welcome_side">
             <div className="g1">
               <span className="t1">Bienvenue Chez</span>
-              <span className="openTag close">
+              <span className="openTag open">
                 <span className="ico">
                   <svg
                     viewBox="0 0 10 10"
@@ -156,7 +156,7 @@ Venez donc au Friend's Food à Bonamoussadi dans Douala, et dégustez des grilla
                   </svg>
                 </span>
                 <span className="dot" />
-                <span className="text">Fermé</span>
+                <span className="text">Ouvert</span>
               </span>
             </div>
             <h1 className="resto_name">Friend’s Foods Restaurant</h1>
@@ -255,6 +255,7 @@ Venez donc au Friend's Food à Bonamoussadi dans Douala, et dégustez des grilla
                 <input
                   type="text"
                   placeholder="Que voulez-vous mangez aujourd'hui"
+                  className="home_input_search__field"
                 />
                 <button className="ico">
                   <svg

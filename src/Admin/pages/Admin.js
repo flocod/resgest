@@ -193,12 +193,12 @@ const Admin = () => {
                               <td>Actions</td>
                             </tr>
 
-                            {filteredEstablishments.map((user) => (
-                              <tr key={user.USER_ID}>
-                                <td>{user.USER_ID}</td>
+                            {filteredEstablishments.map((user,index) => (
+                              <tr key={index + 1}>
+                                <td>{index + 1}</td>
                                 <td>{user.USER_TYPE_NAME}</td>
                                 <td>
-                                { user.USER_TYPE === 2 ? <ToggleBtn id={user.USER_ID} state={user.USER_STATE=== stateUser.activer ? true : false} ></ToggleBtn> : ""}
+                                { user.USER_TYPE === 2 ? <ToggleBtn actionType={"toggleAdmin"} id={user.USER_ID} state={user.USER_STATE=== stateUser.activer ? true : false} ></ToggleBtn> : ""}
                                 </td>
                                 <td>{user.USER_NAME} </td>
                                 <td>{user.USER_EMAIL}</td>

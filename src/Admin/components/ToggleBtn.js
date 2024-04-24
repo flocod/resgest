@@ -1,48 +1,5 @@
-// import React, { useState } from "react"; // Import useState for state management
-// import { setUserState } from "../API/api";
-// import { getUserData } from "../../utils";
-// function ToggleBtn(props) {
-//   const [isOn, setIsOn] = useState(props.state); // Initialize state for toggle status
-
-//   const handleClick = async () => {
-//     setIsOn(!isOn); // Toggle state on click
-
-//     const userDATA = getUserData();
-//     const formData = new FormData();
-//     console.log("!isOn",!isOn);
-
-//      const userState = !isOn === false ? 3 : 1;
-
-//     formData.append("USER_STATE",userState);
-//     formData.append("USER_ID",userDATA.user.USER_ID);
-//     setUserState(formData).then((res)=>{
-//       if(res){
-//         console.log(res);
-//       }
-//     })
-//   };
-
-//   const toggleClass = isOn ? "ToggleOn" : "ToggleOff"; // Dynamically set class based on state
-
-//   return (
-//     <div onClick={handleClick} className={`statutToggle ${toggleClass}`}>
-//       <span className="text">
-//         <div className="off">Off</div>
-//         <div className="on">On</div>
-//       </span>
-//       <div className="switch">
-//         {" "}
-//         {/* Add onClick handler */}
-//         <div className="spanSwitch"></div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default ToggleBtn;
-
 import React, { useState } from "react";
-import { setUserState } from "../API/api";
+import { setUserState,setCategoryState,setMenuState } from "../API/api";
 import { getUserData } from "../../utils";
 
 
@@ -53,8 +10,16 @@ function ToggleBtn(props) {
     activer : 2,
     desactiver : 3,
   }
+  const stateMenu = {
+    activer : 1,
+    desactiver : 0,
+  }
+  const stateCategory = {
+    activer : 1,
+    desactiver : 0,
+  }
 
-  const handleClick = async () => {
+  const handleClickUserAdmin = async () => {
     const userState = isOn ? stateUser.desactiver : stateUser.activer; // Modify user state based on current toggle state
 
     const formData = new FormData();
@@ -69,11 +34,54 @@ function ToggleBtn(props) {
       }
     });
   };
+  const handleClickCategory = async () => {
+    const categoryState = isOn ? stateCategory.desactiver : stateCategory.activer; // Modify user state based on current toggle state
+
+    const formData = new FormData();
+    formData.append("CATEGORY_STATUS", categoryState);
+    formData.append("CATEGORY_ID",props.id);
+
+    setCategoryState(formData).then((res) => {
+      if (res) {
+        console.log(res);
+        setIsOn(!isOn); // Update toggle state only if the request is successful
+        console.log("Modification du state");
+      }
+    });
+  };
+  const handleClickMenu = async () => {
+    const temp = isOn ? stateMenu.desactiver : stateMenu.activer; // Modify user state based on current toggle state
+
+    const formData = new FormData();
+    formData.append("ARTICLE_STATUS", temp);
+    formData.append("ARTICLE_ID",props.id);
+
+    setMenuState(formData).then((res) => {
+      if (res) {
+        console.log(res);
+        setIsOn(!isOn); // Update toggle state only if the request is successful
+        console.log("Modification du state");
+      }
+    });
+  };
+
+  const userHandleClick = async () => {
+    switch (props.actionType) {
+      case "toggleAdmin":
+        return await handleClickUserAdmin();
+      case "toggleCategory":
+        return await handleClickCategory();
+      case "toggleMenu":
+        return await handleClickMenu();
+      default:
+        return null; // ou une action par défaut si nécessaire
+    }
+  };
 
   const toggleClass = isOn ? "ToggleOn" : "ToggleOff";
 
   return (
-    <div onClick={handleClick} className={`statutToggle ${toggleClass}`}>
+    <div onClick={userHandleClick} className={`statutToggle ${toggleClass}`}>
       <span className="text">
         <div className="off">Off</div>
         <div className="on">On</div>

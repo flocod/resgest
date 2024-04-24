@@ -7,6 +7,8 @@ import { userLogin } from "../API/api";
 import {useNavigate} from "react-router-dom";
 import { connect } from "react-redux";
 import { userconnection } from '../../redux/action'; // Import the action type
+import { fileDownload } from "../API/api";
+import { getUserData } from "../../utils";
 
 const Connexion = ({userconnection}) => {
   const [isPasswordHide, setPasswordHide] = useState(false);
@@ -77,6 +79,16 @@ const navigate = useNavigate();
   
         console.log("localStore Token", localStorage.getItem('token'))
         console.log("localStore CurrentUser", JSON.parse(localStorage.getItem('CurrentUser')))
+        const establishmentLOGO = getUserData().ESTABLISSEMENT.ESTABLISHMENT_LOGO;
+                fileDownload(establishmentLOGO,"thumbnail").then((url)=>{
+          if(url){
+            console.log("Logo URL ", url)
+            localStorage.setItem("LOGO",url);
+          }
+        });
+
+
+
         handleUserConnection()
         navigate('app/dashboard/',{ replace: false });
       }

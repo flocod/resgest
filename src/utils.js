@@ -18,6 +18,37 @@ export const formatNumberWith = (number, separator=',') => {
     }
   };
 
+export const formaterTimestamp = (timestamp) =>{
+  // Convertir le timestamp en objet Date
+  const date = new Date(timestamp);
+
+  // Obtenir les informations de la date
+  const jour = date.getDate();
+  const mois = date.getMonth() + 1; // Janvier est à l'indice 0, donc on ajoute 1
+  const annee = date.getFullYear();
+
+  // Formattage des informations de la date
+  const jourString = jour.toString().padStart(2, "0"); // Mettre un 0 devant si le jour est inférieur à 10
+  const moisString = mois.toString().padStart(2, "0"); // Mettre un 0 devant si le mois est inférieur à 10
+
+  // Retourner la date formatée
+  return `${jourString} ${nomDuMois(mois)} ${annee}`;
+}
+
+// Fonction pour obtenir le nom du mois en fonction de son indice
+function nomDuMois(mois) {
+  const moisNoms = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+                   "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+  return moisNoms[mois - 1];
+}
+
+
+export const isEmpty = (val) => {
+  return val === undefined || val == null || val.length <= 0 ? true : false;
+};
+
+
+
   export const countryPhone = [{"country":"Afghanistan","code":"93","iso":"AF"},
 {"country":"Albania","code":"355","iso":"AL"},
 {"country":"Algeria","code":"213","iso":"DZ"},
