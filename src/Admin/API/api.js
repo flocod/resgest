@@ -69,7 +69,8 @@ const fetchData__no_Alert_no_body = async (method, headers, url) => {
     if (data.reponse === 1) {
       return data;
     } else {
-      console.log("Error", data.message);
+      console.log("Error in Api", data.message);
+      return data;
     }
   } catch (error) {
     console.log("Une erreur s'est produite lors de l'envoi des données.",error);
@@ -280,6 +281,16 @@ export const updateArticle = async (formData) => {
   );
 };
 
+
+export const updateEstablishment = async (formData) => {
+  return fetchData(
+    "POST",
+    {},
+    endpoints.public.updateEstablishment,
+    formData
+  );
+};
+
 export const createUser = async (formData) => {
   return fetchData(
     "POST",
@@ -293,6 +304,15 @@ export const deleteCategory = async (formData) => {
     "POST",
     {},
     endpoints.public.deleteCategory,
+    formData
+  );
+};
+
+export const deleteUser = async (formData) => {
+  return fetchData(
+    "POST",
+    {},
+    endpoints.public.deleteUser,
     formData
   );
 };
@@ -314,6 +334,24 @@ export const upadateCategory = async (formData) => {
     formData
   );
 };
+export const updateEstablishmentOpenDays = async (formData) => {
+  return fetchData(
+    "POST",
+    {},
+    endpoints.public.updateEstablishmentOpenDays,
+    formData
+  );
+};
+
+
+export const updateUser = async (formData) => {
+  return fetchData(
+    "POST",
+    {},
+    endpoints.public.updateUser,
+    formData
+  );
+};
 
 export const userEstablishment = async (ID) => {
   return fetchData__no_Alert_no_body(
@@ -324,11 +362,29 @@ export const userEstablishment = async (ID) => {
 };
 
 
+export const loadEstablishment = async (ID) => {
+  return fetchData__no_Alert_no_body(
+    "GET",
+    {},
+    endpoints.public.loadEstablishment+`/${ID}`
+  );
+};
+
+
 export const getEstablishment = async (ID) => {
   return fetchData__no_Alert_no_body(
     "GET",
     {},
     endpoints.public.getEstablishment+`?ESTABLISHMENT_ID=${ID}`
+  );
+};
+
+
+export const incrementArticleView = async (ID) => {
+  return fetchData__no_Alert_no_body(
+    "GET",
+    {},
+    endpoints.public.incrementArticleView+`?ARTICLE_ID=${ID}`
   );
 };
 
@@ -376,6 +432,15 @@ export const getCategoryByID = async (ID) => {
     "GET",
     {},
     endpoints.public.getCategoryByID+`?CATEGORY_ID=${ID}`
+  );
+};
+
+
+export const getUserByID = async (ID) => {
+  return fetchData__no_Alert_no_body(
+    "GET",
+    {},
+    endpoints.public.getUserByID+`?USER_ID=${ID}`
   );
 };
 

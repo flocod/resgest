@@ -4,13 +4,36 @@ import Bar from "../components/Bar";
 import { connect } from "react-redux";
 import { increment, decrement, menuio } from "../../redux/action";
 // import BtnMain from "../components/BtnMain";
-import { getEstablishment } from "../API/api";
+import {
+  getEstablishment,
+  updateEstablishment,
+  updateEstablishmentOpenDays,
+} from "../API/api";
 import { getUserData } from "../../utils";
+
 function Day(props) {
   const [isChecked, setIsChecked] = useState(props.isChecked || false); // Initialize isChecked based on props or default to false
+  const [opentime, setOpenTime] = useState(
+    props.openDays[props.day].open === "closed"
+      ? "00:00"
+      : props.openDays[props.day].open
+  );
+  const [closetime, setCloseTime] = useState(
+    props.openDays[props.day].close === "closed"
+      ? "00:00"
+      : props.openDays[props.day].close
+  );
 
   const handleCheckboxChange = (event) => {
+    console.log("event.target.checked", event.target.checked);
     setIsChecked(event.target.checked);
+  };
+
+  const handleOpenTimeChange = (event) => {
+    setOpenTime(event.target.value);
+  };
+  const handleCloseTimeChange = (event) => {
+    setCloseTime(event.target.value);
   };
   return (
     <div className="day">
@@ -19,6 +42,7 @@ function Day(props) {
           id={props.day}
           type="checkbox"
           checked={isChecked}
+          active={`${isChecked}`}
           value={props.day}
           name={props.day}
           onChange={handleCheckboxChange}
@@ -29,11 +53,23 @@ function Day(props) {
       <div className="containHours">
         <div className="itemHours openHours">
           <label htmlFor={`${props.day}Open`}>Open</label>
-          <input type="time" id={`${props.day}Open`} name={`${props.day}Open`} />
+          <input
+            onChange={handleOpenTimeChange}
+            type="time"
+            id={`${props.day}Open`}
+            name={`${props.day}Open`}
+            value={opentime}
+          />
         </div>
         <div className="itemHours closeHours">
           <label htmlFor={`${props.day}Close`}>Close</label>
-          <input type="time" id={`${props.day}Close`} name={`${props.day}Close`} />
+          <input
+            onChange={handleCloseTimeChange}
+            type="time"
+            id={`${props.day}Close`}
+            name={`${props.day}Close`}
+            value={closetime}
+          />
         </div>
       </div>
     </div>
@@ -41,15 +77,331 @@ function Day(props) {
 }
 
 const Settings = () => {
-  const openDays = {
-    monday: false,
-    tuesday: true,
-    wednesday: true,
-    thursday: true,
-    friday: true,
-    saturday: true,
-    sunday: true,
-  };
+  // let openDays = '{"Monday": {"open": "08:00", "close": "22:00"}, "Tuesday": {"open": "08:00", "close": "22:00"}, "Wednesday": {"open": "08:00", "close": "22:00"}, "Thursday": {"open": "08:00", "close": "22:00"}, "Friday": {"open": "08:00", "close": "22:00"}, "Saturday": {"open": "09:00", "close": "22:00"}, "Sunday": {"open": "closed", "close": "closed"}}';
+  const openDaysBase93 =
+    "77ù92ù48ù24ù23ù13ù10ù34ù92ù80ù94ù77ù92ù24ù25ù14ù23ù92ù80ù94ù92ù0ù8ù80ù0ù0ù92ù83ù94ù92ù12ù21ù24ù28ù14ù92ù80ù94ù92ù2ù2ù80ù0ù0ù92ù78ù83ù94ù92ù55ù30ù14ù28ù13ù10ù34ù92ù80ù94ù77ù92ù24ù25ù14ù23ù92ù80ù94ù92ù0ù8ù80ù0ù0ù92ù83ù94ù92ù12ù21ù24ù28ù14ù92ù80ù94ù92ù2ù2ù80ù0ù0ù92ù78ù83ù94ù92ù58ù14ù13ù23ù14ù28ù13ù10ù34ù92ù80ù94ù77ù92ù24ù25ù14ù23ù92ù80ù94ù92ù0ù8ù80ù0ù0ù92ù83ù94ù92ù12ù21ù24ù28ù14ù92ù80ù94ù92ù2ù2ù80ù0ù0ù92ù78ù83ù94ù92ù55ù17ù30ù27ù28ù13ù10ù34ù92ù80ù94ù77ù92ù24ù25ù14ù23ù92ù80ù94ù92ù0ù8ù80ù0ù0ù92ù83ù94ù92ù12ù21ù24ù28ù14ù92ù80ù94ù92ù2ù2ù80ù0ù0ù92ù78ù83ù94ù92ù41ù27ù18ù13ù10ù34ù92ù80ù94ù77ù92ù24ù25ù14ù23ù92ù80ù94ù92ù0ù8ù80ù0ù0ù92ù83ù94ù92ù12ù21ù24ù28ù14ù92ù80ù94ù92ù2ù2ù80ù0ù0ù92ù78ù83ù94ù92ù54ù10ù29ù30ù27ù13ù10ù34ù92ù80ù94ù77ù92ù24ù25ù14ù23ù92ù80ù94ù92ù0ù9ù80ù0ù0ù92ù83ù94ù92ù12ù21ù24ù28ù14ù92ù80ù94ù92ù2ù2ù80ù0ù0ù92ù78ù83ù94ù92ù54ù30ù23ù13ù10ù34ù92ù80ù94ù77ù92ù24ù25ù14ù23ù92ù80ù94ù92ù12ù21ù24ù28ù14ù13ù92ù83ù94ù92ù12ù21ù24ù28ù14ù92ù80ù94ù92ù12ù21ù24ù28ù14ù13ù92ù78ù78ù";
+  // let openDays = "{\n    \"Monday\": {\n      \"open\": \"08:00\",\n      \"close\": \"22:00\"\n    },\n    \"Tuesday\": {\n      \"open\": \"08:00\",\n      \"close\": \"22:00\"\n    },\n    \"Wednesday\": {\n      \"open\": \"08:00\",\n      \"close\": \"22:00\"\n    },\n    \"Thursday\": {\n      \"open\": \"08:00\",\n      \"close\": \"22:00\"\n    },\n    \"Friday\": {\n      \"open\": \"08:00\",\n      \"close\": \"22:00\"\n    },\n    \"Saturday\": {\n      \"open\": \"09:00\",\n      \"close\": \"22:00\"\n    },\n    \"Sunday\": {\n      \"open\": \"closed\",\n      \"close\": \"closed\"\n    }\n  }";
+
+  // const openDays = {
+  //   Monday: {
+  //     open: "08:00",
+  //     close: "22:00",
+  //   },
+  //   Tuesday: {
+  //     open: "08:00",
+  //     close: "22:00",
+  //   },
+  //   Wednesday: {
+  //     open: "08:00",
+  //     close: "22:00",
+  //   },
+  //   Thursday: {
+  //     open: "08:00",
+  //     close: "22:00",
+  //   },
+  //   Friday: {
+  //     open: "08:00",
+  //     close: "22:00",
+  //   },
+  //   Saturday: {
+  //     open: "09:00",
+  //     close: "22:00",
+  //   },
+  //   Sunday: {
+  //     open: "closed",
+  //     close: "closed",
+  //   },
+  // };
+
+  const base93String = getUserData().ESTABLISSEMENT.ESTABLISHMENT_OPENDAYS;
+  console.log(
+    "base93String-------------->",
+    getUserData().ESTABLISSEMENT.ESTABLISHMENT_OPENDAYS
+  );
+  // const regex = /(?<=})|(?="),/g;
+  // const cleanString = jsonString.replace(regex, "");
+  // console.log("cleanString",cleanString)
+  // let openDays = JSON.parse(jsonString);
+  //  openDays = JSON.parse(`${openDays + ""}`);
+
+  // console.log("openDays",openDays);
+
+  function convertToBase93(inputString) {
+    // Create the base 63 mapping table
+    const base63Mapping = {
+      0: 0,
+      1: 1,
+      2: 2,
+      3: 3,
+      4: 4,
+      5: 5,
+      6: 6,
+      7: 7,
+      8: 8,
+      9: 9,
+      a: 10,
+      b: 11,
+      c: 12,
+      d: 13,
+      e: 14,
+      f: 15,
+      g: 16,
+      h: 17,
+      i: 18,
+      j: 19,
+      k: 20,
+      l: 21,
+      m: 22,
+      n: 23,
+      o: 24,
+      p: 25,
+      q: 26,
+      r: 27,
+      s: 28,
+      t: 29,
+      u: 30,
+      v: 31,
+      w: 32,
+      x: 33,
+      y: 34,
+      z: 35,
+      // Uppercase characters
+      A: 36,
+      B: 37,
+      C: 38,
+      D: 39,
+      E: 40,
+      F: 41,
+      G: 42,
+      H: 43,
+      I: 44,
+      J: 45,
+      K: 46,
+      L: 47,
+      M: 48,
+      N: 49,
+      O: 50,
+      P: 51,
+      Q: 52,
+      R: 53,
+      S: 54,
+      T: 55,
+      U: 56,
+      V: 57,
+      W: 58,
+      X: 59,
+      Y: 60,
+      Z: 61,
+      // Special characters (unchanged)
+      "!": 62,
+      "@": 63,
+      "#": 64,
+      $: 65,
+      "%": 66,
+      "^": 67,
+      "&": 68,
+      "*": 69,
+      "(": 70,
+      ")": 71,
+      "-": 72,
+      "+": 73,
+      "=": 74,
+      "[": 75,
+      "]": 76,
+      "{": 77,
+      "}": 78,
+      ";": 79,
+      ":": 80,
+      "<": 81,
+      ">": 82,
+      ",": 83,
+      ".": 84,
+      "/": 85,
+      "?": 86,
+      "`": 87,
+      "~": 88,
+      "|": 89,
+      "\\": 90,
+      "'": 91,
+      '"': 92,
+      _: 93,
+      " ": 94,
+    };
+
+    // Convert the string character by character
+    let base63Digits = [];
+    for (const char of inputString) {
+      if (char in base63Mapping) {
+        base63Digits.push(base63Mapping[char] + "ù");
+      } else {
+        console.error(`Invalid character: ${char}`);
+        return;
+      }
+    }
+
+    // Pad the result to the original string's length
+    const paddedLength = inputString.length;
+    while (base63Digits.length < paddedLength) {
+      base63Digits.unshift(0);
+    }
+
+    // Join the base 33 digits into a string
+    const base63String = base63Digits.join("");
+    return base63String;
+  }
+
+  function convertFromBase93(base93String) {
+    // Inverted base 93 mapping (reverse the key-value pairs)
+    const base63Mapping = {
+      0: 0,
+      1: 1,
+      2: 2,
+      3: 3,
+      4: 4,
+      5: 5,
+      6: 6,
+      7: 7,
+      8: 8,
+      9: 9,
+      a: 10,
+      b: 11,
+      c: 12,
+      d: 13,
+      e: 14,
+      f: 15,
+      g: 16,
+      h: 17,
+      i: 18,
+      j: 19,
+      k: 20,
+      l: 21,
+      m: 22,
+      n: 23,
+      o: 24,
+      p: 25,
+      q: 26,
+      r: 27,
+      s: 28,
+      t: 29,
+      u: 30,
+      v: 31,
+      w: 32,
+      x: 33,
+      y: 34,
+      z: 35,
+      // Uppercase characters
+      A: 36,
+      B: 37,
+      C: 38,
+      D: 39,
+      E: 40,
+      F: 41,
+      G: 42,
+      H: 43,
+      I: 44,
+      J: 45,
+      K: 46,
+      L: 47,
+      M: 48,
+      N: 49,
+      O: 50,
+      P: 51,
+      Q: 52,
+      R: 53,
+      S: 54,
+      T: 55,
+      U: 56,
+      V: 57,
+      W: 58,
+      X: 59,
+      Y: 60,
+      Z: 61,
+      // Special characters (unchanged)
+      "!": 62,
+      "@": 63,
+      "#": 64,
+      $: 65,
+      "%": 66,
+      "^": 67,
+      "&": 68,
+      "*": 69,
+      "(": 70,
+      ")": 71,
+      "-": 72,
+      "+": 73,
+      "=": 74,
+      "[": 75,
+      "]": 76,
+      "{": 77,
+      "}": 78,
+      ";": 79,
+      ":": 80,
+      "<": 81,
+      ">": 82,
+      ",": 83,
+      ".": 84,
+      "/": 85,
+      "?": 86,
+      "`": 87,
+      "~": 88,
+      "|": 89,
+      "\\": 90,
+      "'": 91,
+      '"': 92,
+      _: 93,
+      " ": 94,
+    };
+
+    const invertedMapping = {};
+    for (const key in base63Mapping) {
+      invertedMapping[base63Mapping[key]] = key;
+    }
+
+    // Split the base 93 string into digits
+    const base93Digits = base93String.split("ù");
+    base93Digits.pop();
+    console.log(base93Digits);
+    // Convert each digit to its character representation
+    let decodedString = "";
+    for (const digit of base93Digits) {
+      const char = invertedMapping[digit];
+      if (char !== undefined) {
+        decodedString += char;
+      } else {
+        console.error(`Invalid base 93 digit: ${digit}`);
+        return;
+      }
+    }
+
+    return decodedString;
+  }
+
+  let openDays = convertFromBase93(String(base93String));
+  console.log("openDays", openDays);
+  openDays = JSON.parse(openDays);
+  console.log("openDays", openDays);
+  // try {
+  //   // Assuming getUserData() returns a dictionary
+  //   const user_data = getUserData();
+
+  //   // Check if ESTABLISSEMENT and ESTABLISHMENT_OPENDAYS exist
+  //   if ('ESTABLISSEMENT' in user_data && 'ESTABLISHMENT_OPENDAYS' in user_data['ESTABLISSEMENT']) {
+  //     const openDaysJson = user_data['ESTABLISSEMENT']['ESTABLISHMENT_OPENDAYS'];
+  //     console.log(openDaysJson);
+  //     // Try parsing the JSON string
+  //     try {
+  //       const openDays = JSON.parse(openDaysJson);
+  //       console.log("openDays Objet", openDays); // Use optional chaining for safer access
+  //       console.log("openDays", openDays?.Monday); // Use optional chaining for safer access
+  //     } catch (jsonError) {
+  //       console.error("Error: Invalid JSON format in ESTABLISHMENT_OPENDAYS", jsonError);
+  //     }
+  //   } else {
+  //     console.error("Error: ESTABLISSEMENT or ESTABLISHMENT_OPENDAYS not found in user data");
+  //   }
+  // } catch (error) {
+  //   console.error("Error:", error);
+  // }
 
   const [isPasswordHide, setPasswordHide] = useState(false);
   const [selectedInputFile, setSelectedInputFile] = useState("");
@@ -66,8 +418,12 @@ const Settings = () => {
     est_cover: "",
   });
 
+  const establishmentID = getUserData().ESTABLISSEMENT.ESTABLISHMENT_ID;
+
   let logo_input = useRef();
   let cover_input = useRef();
+  let formUpdateSetting = useRef();
+  let formUpdateOpenDays = useRef();
 
   const handlePasswordHide = () => {
     setPasswordHide(!isPasswordHide);
@@ -89,7 +445,6 @@ const Settings = () => {
     });
   };
 
-
   const handleChangeInputFileImage = (evt) => {
     evt.stopPropagation();
     let picImg = document.querySelector(`.${selectedInputFile}`);
@@ -104,12 +459,11 @@ const Settings = () => {
       }
     }
 
-    const { name} = evt.target;
+    const { name } = evt.target;
     setFormData({
       ...formData,
       [name]: evt.target.files[0],
     });
-
   };
 
   const handleClickLogo_btn = () => {
@@ -123,15 +477,17 @@ const Settings = () => {
   };
 
   const fn_getEstablishment = async () => {
-    console.log("res fefef -------------------")
+    console.log("res fefef -------------------");
     try {
-     console.log( getUserData());
+      console.log(getUserData());
       getEstablishment(getUserData().ESTABLISSEMENT.ESTABLISHMENT_ID).then(
         (res) => {
           if (res) {
-            console.log("res fefef -------------------",res)
+            console.log("res fefef -------------------", res);
+            const userType =
+              getUserData().user.USER_TYPE === 1 ? "Owner" : "Admin";
             setFormData({
-              user_email: getUserData().user.USER_EMAIL,
+              user_email: getUserData().user.USER_EMAIL + ` (${userType})`,
               est_email: res.data.ESTABLISHMENT_EMAIL,
               est_name: res.data.ESTABLISHMENT_NAME,
               est_phone: res.data.ESTABLISHMENT_PHONE,
@@ -140,7 +496,8 @@ const Settings = () => {
               est_description: res.data.ESTABLISHMENT_DESCRIPTION,
               est_logo: res.data.ESTABLISHMENT_LOGO,
               est_cover: res.data.ESTABLISHMENT_COVER,
-            })
+              est_openDays: res.data.ESTABLISHMENT_OPENDAYS,
+            });
             console.log("res", res);
           }
         }
@@ -150,17 +507,156 @@ const Settings = () => {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const form = formUpdateSetting.current;
+
+    console.log("form", form);
+
+    const formDataToSend = new FormData(form);
+
+    const newFormData = new FormData();
+    newFormData.append("ESTABLISHMENT_ID", establishmentID);
+    newFormData.append("USER_ID", getUserData().user.USER_ID);
+
+    // setFormData({
+    //   user_email: getUserData().user.USER_EMAIL,
+    //   est_email: res.data.ESTABLISHMENT_EMAIL,
+    //   est_name: res.data.ESTABLISHMENT_NAME,
+    //   est_phone: res.data.ESTABLISHMENT_PHONE,
+    //   est_location: res.data.ESTABLISHMENT_LOCATION,
+    //   est_location_link: res.data.ESTABLISHMENT_LOCATION_LINK,
+    //   est_description: res.data.ESTABLISHMENT_DESCRIPTION,
+    //   est_logo: res.data.ESTABLISHMENT_LOGO,
+    //   est_cover: res.data.ESTABLISHMENT_COVER,
+    // })
+
+    for (const [key, value] of formDataToSend.entries()) {
+      switch (key) {
+        case "user_email":
+          newFormData.append("USER_EMAIL", value);
+          break;
+        case "est_email":
+          newFormData.append("ESTABLISHMENT_EMAIL", value);
+          break;
+        case "est_name":
+          newFormData.append("ESTABLISHMENT_NAME", value);
+          break;
+        case "est_phone":
+          newFormData.append("ESTABLISHMENT_PHONE", value);
+          break;
+        case "est_location":
+          newFormData.append("ESTABLISHMENT_LOCATION", value);
+          break;
+        case "est_location_link":
+          newFormData.append("ESTABLISHMENT_LOCATION_LINK", value);
+          break;
+        case "est_description":
+          newFormData.append("ESTABLISHMENT_DESCRIPTION", value);
+          break;
+        case "logo":
+          newFormData.append("ESTABLISHMENT_LOGO", value);
+          break;
+        case "couverture":
+          newFormData.append("ESTABLISHMENT_COVER", value);
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    updateEstablishment(newFormData).then((resp) => {
+      if (resp) {
+        console.log(resp);
+      }
+    });
+
+    // try {
+    //   const response = await fetch("/api/add-meal", {
+    //     method: "POST",
+    //     body: formDataObj,
+    //   });
+    //   const data = await response.json();
+    //   console.log(data);
+    // } catch (error) {
+    //   console.error("Error:", error);
+    // }
+  };
+
+  const handleSubmitOpenDays = async (e) => {
+    e.preventDefault();
+
+    const days = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ];
+    const form = formUpdateOpenDays.current;
+
+    console.log("form", form);
+
+    const formDataToSend = new FormData(form);
+
+    const newFormData = new FormData();
+    const newOpenDays = { ...openDays };
+    const filterCloseDays = { ...openDays };
+    const activeDays = [];
+    for (const [key, value] of formDataToSend.entries()) {
+      for (let i = 0; i < days.length; i++) {
+        if (`${days[i]}Open` === key) {
+          newOpenDays[days[i]].open = value;
+        } else if (`${days[i]}Close` === key) {
+          newOpenDays[days[i]].close = value;
+        } else if (days[i] === key) {
+          // checkboxValue = formDataToSend.get(`${days[i]}`);
+          const checkboxValue = document
+            .getElementById(days[i])
+            .getAttribute("active");
+          console.log("checkboxValue : ", checkboxValue);
+          activeDays.push(days[i]);
+          delete filterCloseDays[days[i]];
+        }
+      }
+    }
+
+    Object.keys(filterCloseDays).forEach((key) => {
+      newOpenDays[`${key}`].open = "closed";
+      newOpenDays[`${key}`].close = "closed";
+    });
+
+    console.log("newOpenDays", newOpenDays);
+    newFormData.append(
+      "ESTABLISHMENT_OPENDAYS",
+      convertToBase93(JSON.stringify({ ...newOpenDays }))
+    );
+    newFormData.append("ESTABLISHMENT_ID", establishmentID);
+
+    await updateEstablishmentOpenDays(newFormData).then((resp) => {
+      if (resp) {
+        console.log(resp);
+      //! mise a jour du localStorage CurrentUser
+       const CurrentUser = JSON.parse(localStorage.getItem('CurrentUser'));
+       console.log(CurrentUser)
+       console.log('resp.data========>',resp.data)
+       delete CurrentUser.ESTABLISSEMENT;
+       CurrentUser['ESTABLISSEMENT']={...resp.data};
+       localStorage.setItem('CurrentUser',JSON.stringify(CurrentUser));
+      }
+    });
+  };
 
   useEffect(() => {
-
     if (!isEstFetch) {
       fn_getEstablishment();
       setIsEstFetch(true);
     }
-   
-
   }, [isEstFetch]);
-
 
   return (
     <main className="adminConnexion dashboard AddMenu SettingsPage">
@@ -181,7 +677,11 @@ const Settings = () => {
 
               <div className="flex_Categories">
                 <div className="contentForm createaccount">
-                  <form className="contentForm__struct">
+                  <form
+                    ref={formUpdateSetting}
+                    onSubmit={handleSubmit}
+                    className="contentForm__struct"
+                  >
                     <div className="head_statItem">
                       <span className="title">Establishment configuration</span>
                       <div className="Pmargin"></div>
@@ -193,19 +693,39 @@ const Settings = () => {
                           <label htmlFor="">
                             Your email <sup>*</sup>
                           </label>
-                          <input onChange={handleChange} name="user_email" value={formData.user_email} type="email" placeholder="example@gmail.com" />
+                          <input
+                            style={{ opacity: 0.4 }}
+                            readOnly
+                            onChange={handleChange}
+                            name="user_email"
+                            value={formData.user_email}
+                            type="email"
+                            placeholder="example@gmail.com"
+                          />
                         </div>
                         <div className="input">
                           <label htmlFor="">
                             Restaurant Phone Number <sup>*</sup>
                           </label>
-                          <input  onChange={handleChange} name="est_phone" value={formData.est_phone} type="tel" placeholder="Enter your number" />
+                          <input
+                            onChange={handleChange}
+                            name="est_phone"
+                            value={formData.est_phone}
+                            type="tel"
+                            placeholder="Enter your number"
+                          />
                         </div>
                         <div className="input">
                           <label htmlFor="">
                             Restaurant Location <sup>*</sup>
                           </label>
-                          <input  onChange={handleChange} name="est_location" value={formData.est_location} type="tel" placeholder="Enter your Location" />
+                          <input
+                            onChange={handleChange}
+                            name="est_location"
+                            value={formData.est_location}
+                            type="tel"
+                            placeholder="Enter your Location"
+                          />
                         </div>
                       </div>
 
@@ -215,10 +735,11 @@ const Settings = () => {
                             Restaurant Name <sup>*</sup>
                           </label>
                           <input
-                           onChange={handleChange}
+                            onChange={handleChange}
                             type="text"
                             placeholder="Your restaurant name"
-                            name="est_name" value={formData.est_name}
+                            name="est_name"
+                            value={formData.est_name}
                           />
                         </div>
                         <div className="input">
@@ -226,10 +747,11 @@ const Settings = () => {
                             Restaurant Location link <sup>*</sup>
                           </label>
                           <input
-                           onChange={handleChange}
+                            onChange={handleChange}
                             type="text"
                             placeholder="https://map.google.com/"
-                            name="est_location_link" value={formData.est_location_link}
+                            name="est_location_link"
+                            value={formData.est_location_link}
                           />
                         </div>
                         <div className="input">
@@ -237,10 +759,11 @@ const Settings = () => {
                             Restaurant Email <sup>*</sup>
                           </label>
                           <input
-                           onChange={handleChange}
+                            onChange={handleChange}
                             type="Email"
                             placeholder="Your restaurant email"
-                            name="est_email" value={formData.est_email}
+                            name="est_email"
+                            value={formData.est_email}
                           />
                         </div>
                       </div>
@@ -252,12 +775,13 @@ const Settings = () => {
                           Restaurant Description <sup>*</sup>
                         </label>
                         <textarea
-                           onChange={handleChange}
+                          onChange={handleChange}
                           id=""
                           cols="20"
                           rows="4"
                           placeholder="Enter your Restaurant description"
-                          name="est_description" value={formData.est_description}
+                          name="est_description"
+                          value={formData.est_description}
                         ></textarea>
                       </div>
                     </div>
@@ -273,7 +797,7 @@ const Settings = () => {
                           </label>
                           <div className="image">
                             <img
-                            style={
+                              style={
                                 formData.est_cover
                                   ? { opacity: 1 }
                                   : { opacity: 0 }
@@ -281,7 +805,6 @@ const Settings = () => {
                               className="coverIMG"
                               src={formData.est_cover}
                               alt="couverture du restaurant"
-
                             />
                             <svg
                               width={28}
@@ -327,7 +850,7 @@ const Settings = () => {
                           </label>
                           <div className="image">
                             <img
-                             style={
+                              style={
                                 formData.est_logo
                                   ? { opacity: 1 }
                                   : { opacity: 0 }
@@ -335,7 +858,6 @@ const Settings = () => {
                               className="logoIMG"
                               src={formData.est_logo}
                               alt="Logo du restaurant"
-
                             />
                             <svg
                               width={28}
@@ -392,23 +914,83 @@ const Settings = () => {
                 </div>
 
                 <div className="BoxOpenDay ">
-                  <div className="BoxOpenDay__struct">
+                  <form
+                    ref={formUpdateOpenDays}
+                    onSubmit={handleSubmitOpenDays}
+                    className="BoxOpenDay__struct"
+                  >
                     <div className="head_statItem">
                       <span className="title">Open Days</span>
                     </div>
 
                     <div className="containDays">
-                      <Day day="Monday" isChecked={openDays.monday}></Day>
-                      <Day day="Tuesday" isChecked={openDays.tuesday}></Day>
-                      <Day day="Wednesday" isChecked={openDays.wednesday}></Day>
-                      <Day day="Thursday"  isChecked={openDays.thursday}></Day>
-                      <Day day="Friday" isChecked={openDays.friday}></Day>
-                      <Day day="Saturday" isChecked={openDays.saturday}></Day>
-                      <Day day="Sunday" isChecked={openDays.sunday}></Day>
+                      <Day
+                        openDays={openDays}
+                        day="Monday"
+                        isChecked={
+                          openDays.Monday.close === openDays.Monday.open
+                            ? false
+                            : true
+                        }
+                      ></Day>
+                      <Day
+                        openDays={openDays}
+                        day="Tuesday"
+                        isChecked={
+                          openDays.Tuesday.close === openDays.Tuesday.open
+                            ? false
+                            : true
+                        }
+                      ></Day>
+                      <Day
+                        openDays={openDays}
+                        day="Wednesday"
+                        isChecked={
+                          openDays.Wednesday.close === openDays.Wednesday.open
+                            ? false
+                            : true
+                        }
+                      ></Day>
+                      <Day
+                        openDays={openDays}
+                        day="Thursday"
+                        isChecked={
+                          openDays.Thursday.close === openDays.Thursday.open
+                            ? false
+                            : true
+                        }
+                      ></Day>
+                      <Day
+                        openDays={openDays}
+                        day="Friday"
+                        isChecked={
+                          openDays.Friday.close === openDays.Friday.open
+                            ? false
+                            : true
+                        }
+                      ></Day>
+                      <Day
+                        openDays={openDays}
+                        day="Saturday"
+                        isChecked={
+                          openDays.Saturday.close === openDays.Saturday.open
+                            ? false
+                            : true
+                        }
+                      ></Day>
+                      <Day
+                        openDays={openDays}
+                        day="Sunday"
+                        isChecked={
+                          openDays.Sunday.close === openDays.Sunday.open
+                            ? false
+                            : true
+                        }
+                      ></Day>
                     </div>
 
                     <button type="submit">Update</button>
-                  </div>
+                  </form>
                 </div>
               </div>
             </div>

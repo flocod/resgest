@@ -84,7 +84,7 @@ const Menus = () => {
           <td>{temp.CATEGORY_NAME}</td>
           <td>{temp.ARTICLE_PRICE} XAF</td>
           <td>{temp.ARTICLE_PREPARE_TIME} min.</td>
-          <td>{temp.ARTICLE_VIEW} k</td>
+          <td>{temp.ARTICLE_VIEW}</td>
           <td>{formaterTimestamp(Number(temp.CREATEAT))}</td>
           <td>
             <div className="btnAction">
@@ -102,6 +102,20 @@ const Menus = () => {
     );
   }
 
+  const getAllArticlesByEstablishment_temp = async () => {
+    try {
+      console.log("establishmentID", establishmentID);
+      getAllArticlesByEstablishment(establishmentID).then((res) => {
+        if (res) {
+          setArticles(res.data);
+          console.log("getAllArticlesByEstablishment", res);
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleDelete = async (e)=>{
     const articleId = e.target.getAttribute("articleid");
 
@@ -112,6 +126,7 @@ const Menus = () => {
       if (res) {
         console.log(res);
         fetchCategorie();
+        getAllArticlesByEstablishment_temp();
       }
     });
   }

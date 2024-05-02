@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { menuio } from "../../redux/action";
 import { userDeconnection } from "../API/api";
 import { getUserData } from "../../utils";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 const Bar = ({ menuio, toggleMenu, name }) => {
   const [isActiveDropUser, setIsActiveDropUser] = useState(false);
 
@@ -13,14 +13,20 @@ const Bar = ({ menuio, toggleMenu, name }) => {
     setIsActiveDropUser(!isActiveDropUser);
   };
 
+  const establishmentUrl = getUserData().ESTABLISSEMENT.ESTABLISHMENT_LINK;
+  const EST_url =`http://localhost:3000/${establishmentUrl}`;
+
 
   const handleDeconnection = ()=>{
     const formData = new FormData();
           formData.append("USER_ID", userdata.user.USER_ID)
     userDeconnection(formData, userdata.token)
     .then((res) => {
-      localStorage.removeItem('CurrentUser');
-      navigate('/admin');
+      if(res.reponse){
+        console.log(res)
+        localStorage.removeItem('CurrentUser');
+        navigate('/admin');
+      }
     });
   }
 
@@ -116,7 +122,7 @@ const Bar = ({ menuio, toggleMenu, name }) => {
           </svg>
         </div>
 
-        <div className="btn_live">
+        <NavLink target="_blank" to={EST_url} className="btn_live link">
           <svg
             width={16}
             height={16}
@@ -138,7 +144,7 @@ const Bar = ({ menuio, toggleMenu, name }) => {
           </svg>
 
           <div className="text">Live preview</div>
-        </div>
+        </NavLink>
 
         <div className="btn_notification">
           <svg
@@ -200,8 +206,8 @@ const Bar = ({ menuio, toggleMenu, name }) => {
           <div
             className={`dropUser ${isActiveDropUser ? "dropUserActive" : ""}`}
           >
-            <span className="span">Edit Profile</span>
-            <span className="span">Settings</span>
+            <span className="span">  <NavLink to={`/admin/app/admin/updateadmin?id=${userdata.user.USER_ID}`} className="span link">Edit Profile</NavLink></span>
+            <span className="span "><NavLink to={`/admin/app/settings`} className="span link">Settings</NavLink></span>
             <span onClick={handleDeconnection} className="span">Deconnexion</span>
           </div>
         </div>

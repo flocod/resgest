@@ -4,10 +4,11 @@ import Bar from "../components/Bar";
 import { connect } from "react-redux";
 import { increment, decrement, menuio } from "../../redux/action";
 import ToggleBtn from "../components/ToggleBtn";
+import { NavLink } from "react-router-dom";
 // import BtnMain from "../components/BtnMain";
 import Swal from "sweetalert2";
 import { validatePhoneNumberAndCountry, getUserData } from "../../utils";
-import { createUser, userEstablishment } from "../API/api";
+import { createUser, userEstablishment, deleteUser } from "../API/api";
 import { useNavigate } from "react-router-dom";
 
 const Admin = () => {
@@ -33,6 +34,21 @@ const Admin = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
+  const handleDelete = (e)=>{
+    const userId = e.target.getAttribute("userid");
+
+    const formData = new FormData();
+    formData.append("USER_ID", userId);
+  
+    deleteUser(formData).then((res) => {
+      if (res) {
+        console.log(res);
+        getUserByEstablishments();
+      }
+    });
+  }
+
 
   const getUserByEstablishments = async () => {
     try {
@@ -206,11 +222,11 @@ const Admin = () => {
                                 <td>{user.DATE}</td>
                                 <td>
                                   <div className="btnAction">
-                                    <div className="btnAction__item btnAction--edit">
+                                    <NavLink to={`./updateadmin?id=${user.USER_ID}`} className="btnAction__item btnAction--edit link">
                                       Edit
-                                    </div>
+                                    </NavLink>
 
-                                    { user.USER_TYPE === 2 ? <div className="btnAction__item btnAction--cancel">Delete</div> : ""}
+                                    { user.USER_TYPE === 2 ? <div onClick={handleDelete} userid={user.USER_ID} className="btnAction__item btnAction--cancel">Delete</div> : ""}
 
                                     
                                   </div>

@@ -4,7 +4,7 @@ import Bar from "../components/Bar";
 import { connect } from "react-redux";
 import { increment, decrement, menuio } from "../../redux/action";
 import { updateArticle, getAllCategory, getArticleById } from "../API/api";
-import { getUserData,isEmpty } from "../../utils";
+import { getUserData, isEmpty } from "../../utils";
 
 import Swal from "sweetalert2";
 
@@ -23,6 +23,8 @@ const UpdateMenus = () => {
   const handleChangeInputFileImage = (evt) => {
     evt.stopPropagation();
 
+    document.querySelector(`.${selectedInputFile}`).style.opacity=1;
+
     let picImg = document.querySelector(`.${selectedInputFile}`);
     console.log("selectedInputFile :", selectedInputFile);
     console.log("picImg", picImg);
@@ -35,6 +37,8 @@ const UpdateMenus = () => {
       }
     }
 
+    
+
     setFormData({
       ...formData,
       imageFile: evt.target.files[0],
@@ -43,15 +47,15 @@ const UpdateMenus = () => {
 
   const handleClickLogo_btn = () => {
     image1.current.click();
-    setSelectedInputFile("logoIMG");
+    setSelectedInputFile("imageFile1");
   };
 
   const handleClickCover_btn = () => {
     image2.current.click();
-    setSelectedInputFile("coverIMG");
+    setSelectedInputFile("imageFile2");
   };
 
-  function isEmptyField(data,message) {
+  function isEmptyField(data, message) {
     Object.getOwnPropertyNames(data).forEach((elt) => {
       if (isEmpty(data[elt]) && elt !== "files") {
         Swal.fire({
@@ -113,7 +117,6 @@ const UpdateMenus = () => {
     const form = formAddMeal.current;
 
     console.log("form", form);
-
 
     const formDataToSend = new FormData(form);
 
@@ -239,8 +242,8 @@ const UpdateMenus = () => {
                   <div className="FormAddMenu__struct">
                     <div className="flexContainer inputMargin">
                       <div
-                        className="inputContainter "
-                        onClick={handleClickCover_btn}
+                        className="inputContainter"
+                        onClick={handleClickLogo_btn}
                       >
                         <div className="input inputFile">
                           <label htmlFor="">
@@ -248,14 +251,15 @@ const UpdateMenus = () => {
                           </label>
                           <div className="image">
                             <img
+                             id="imageFile1"
                               style={
-                                formData.imageFile2
+                                formData.imageFile1
                                   ? { opacity: 1 }
                                   : { opacity: 0 }
                               }
-                              className="coverIMG"
-                              src={formData.imageFile2}
-                              alt="couverture du restaurant"
+                              className="logoIMG imageFile1"
+                              src={formData.imageFile1}
+                              alt="Logo du restaurant"
                             />
                             <svg
                               width={28}
@@ -292,8 +296,8 @@ const UpdateMenus = () => {
                       </div>
 
                       <div
-                        className="inputContainter"
-                        onClick={handleClickLogo_btn}
+                        className="inputContainter "
+                        onClick={handleClickCover_btn}
                       >
                         <div className="input inputFile">
                           <label htmlFor="">
@@ -301,14 +305,15 @@ const UpdateMenus = () => {
                           </label>
                           <div className="image">
                             <img
+                            id="imageFile2"
                               style={
-                                formData.imageFile1
+                                formData.imageFile2
                                   ? { opacity: 1 }
                                   : { opacity: 0 }
                               }
-                              className="logoIMG"
-                              src={formData.imageFile1}
-                              alt="Logo du restaurant"
+                              className="coverIMG imageFile2"
+                              src={formData.imageFile2}
+                              alt="couverture du restaurant"
                             />
                             <svg
                               width={28}
@@ -387,11 +392,12 @@ const UpdateMenus = () => {
                             id="category"
                           >
                             {categories.map((category, index) => {
-
                               const currentCategoryID = formData.category;
-                              console.log("currentCategoryID",currentCategoryID)
+                              console.log(
+                                "currentCategoryID",
+                                currentCategoryID
+                              );
                               if (category.CATEGORY_ID === currentCategoryID) {
-                             
                                 return (
                                   <option
                                     key={index}
@@ -402,7 +408,6 @@ const UpdateMenus = () => {
                                   </option>
                                 );
                               } else {
-                              
                                 return (
                                   <option
                                     key={index}

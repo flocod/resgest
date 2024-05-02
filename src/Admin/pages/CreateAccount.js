@@ -211,7 +211,7 @@ const CreateAccount = () => {
               </NavLink>
             </p>
 
-            <h4>User Informations</h4>
+            <h4 style={{marginBottom: "1em",marginTop: "1em"}}>User Informations</h4>
             <div className="flexContainer">
               <div className="inputContainter">
                 <div className="input">
@@ -274,7 +274,7 @@ const CreateAccount = () => {
               </div>
             </div>
 
-            <h4>Establishment Informations</h4>
+            <h4 style={{marginBottom: "1em",marginTop: "1em"}}>Establishment Informations</h4>
 
             <div className="flexContainer">
               <div className="inputContainter">

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/icons/icon-48x48.png" />
@@ -7,39 +7,67 @@
     <meta name="theme-color" content="#fff" />
 
     <!-- Primary Meta Tags -->
-<title>Menus | Friend's Food Restaurant, commandez maintenant </title>
-<meta name="title" content="Menus | Friend's Food Restaurant, commandez maintenant " />
-<meta name="description" content="Le nouveau local Friend's Food Bonamoussadi est situé au carrefour JC, en face de la station neptune, collé à Axa  Assurance. Pour passer du temps avec vos amis après le travail et savourer des plats savoureux, rendez-vous au restaurant Friend’s Food, Bonamoussadi tenu par l’illustre Chef Stephane Nounamo." />
+    <title>Menus | Friend's Food Restaurant, commandez maintenant</title>
+    <meta
+      name="title"
+      content="Menus | Friend's Food Restaurant, commandez maintenant "
+    />
+    <meta
+      name="description"
+      content="Le nouveau local Friend's Food Bonamoussadi est situé au carrefour JC, en face de la station neptune, collé à Axa  Assurance. Pour passer du temps avec vos amis après le travail et savourer des plats savoureux, rendez-vous au restaurant Friend’s Food, Bonamoussadi tenu par l’illustre Chef Stephane Nounamo."
+    />
 
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://resgest.netlify.io/" />
-<meta property="og:title" content="Menus | Friend's Food Restaurant, commandez maintenant " />
-<meta property="og:description" content="Le nouveau local Friend's Food Bonamoussadi est situé au carrefour JC, en face de la station neptune, collé à Axa  Assurance. Pour passer du temps avec vos amis après le travail et savourer des plats savoureux, rendez-vous au restaurant Friend’s Food, Bonamoussadi tenu par l’illustre Chef Stephane Nounamo." />
-<meta property="og:image" content="%PUBLIC_URL%/about.webp" />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://resgest.netlify.io/" />
+    <meta
+      property="og:title"
+      content="Menus | Friend's Food Restaurant, commandez maintenant "
+    />
+    <meta
+      property="og:description"
+      content="Le nouveau local Friend's Food Bonamoussadi est situé au carrefour JC, en face de la station neptune, collé à Axa  Assurance. Pour passer du temps avec vos amis après le travail et savourer des plats savoureux, rendez-vous au restaurant Friend’s Food, Bonamoussadi tenu par l’illustre Chef Stephane Nounamo."
+    />
+    <meta property="og:image" content="%PUBLIC_URL%/about.webp" />
 
-<!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content="https://resgest.netlify.io/" />
-<meta property="twitter:title" content="Menus | Friend's Food Restaurant, commandez maintenant " />
-<meta property="twitter:description" content="Le nouveau local Friend's Food Bonamoussadi est situé au carrefour JC, en face de la station neptune, collé à Axa  Assurance. Pour passer du temps avec vos amis après le travail et savourer des plats savoureux, rendez-vous au restaurant Friend’s Food, Bonamoussadi tenu par l’illustre Chef Stephane Nounamo." />
-<meta property="twitter:image" content="%PUBLIC_URL%/about.webp" />
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://resgest.netlify.io/" />
+    <meta
+      property="twitter:title"
+      content="Menus | Friend's Food Restaurant, commandez maintenant "
+    />
+    <meta
+      property="twitter:description"
+      content="Le nouveau local Friend's Food Bonamoussadi est situé au carrefour JC, en face de la station neptune, collé à Axa  Assurance. Pour passer du temps avec vos amis après le travail et savourer des plats savoureux, rendez-vous au restaurant Friend’s Food, Bonamoussadi tenu par l’illustre Chef Stephane Nounamo."
+    />
+    <meta property="twitter:image" content="%PUBLIC_URL%/about.webp" />
 
-<!-- Meta Tags Generated with https://metatags.io -->
+    <!-- Meta Tags Generated with https://metatags.io -->
 
-<link rel="apple-touch-icon" href="%PUBLIC_URL%/icons/icon-192x192.png" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/icons/icon-192x192.png" />
 
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <link rel="stylesheet" href="assets/css/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="assets/css/animate.css" />
+    <link rel="stylesheet" href="assets/css/tailwind.css" />
+
+    <!-- ==== WOW JS ==== -->
+    <script src="assets/js/wow.min.js"></script>
     <script>
- 
+      new WOW().init();
+    </script>
+
+    <script>
       //if browser support service worker
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('%PUBLIC_URL%/sw.js');
-      };
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("%PUBLIC_URL%/sw.js");
+      }
     </script>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
@@ -50,9 +78,36 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
- 
+    <style>
+      .bg-primary {
+        background-color: #ff6b01;
+      }
+
+      .text-primary {
+        color: #ff6b01;
+      }
+
+      .hover\:bg-blue-dark:hover {
+        --tw-bg-opacity: 1;
+        background-color: #ff6b01;
+      }
+
+      .hover\:border-blue-dark:hover {
+        --tw-border-opacity: 1;
+        border-color: #ff6b01;
+      }
+
+      .border-primary {
+        --tw-border-opacity: 1;
+        border-color: #ff6b01;
+      }
+    </style>
   </head>
+
   <body>
+
+
+
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--

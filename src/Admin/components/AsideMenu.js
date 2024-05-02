@@ -7,6 +7,9 @@ import { increment, decrement, menuio } from "../../redux/action";
 import { getUserData } from "../../utils";
 import { fileDownload, fn_downloadAndCacheImage } from "../API/api";
 import { endpoints } from "../API/EndPoints";
+
+import { useQrious } from "react-qrious";
+
 const icoHome = (
   <svg
     width={22}
@@ -299,6 +302,76 @@ const navItems = isAdmin
     ];
 
 const AsideMenu = ({ menuio, isMenuActive }) => {
+
+//   const getMainColor = ()=>{
+
+// // const element = document.querySelector('.dashboard .app_container .asideMenu__struct .menuLink.active');
+// // let color;
+// // if (element) {
+
+// //   const computedStyle = window.getComputedStyle(element);
+// //   color = computedStyle.getPropertyValue('background-color');
+// //   console.log(color); // Output: #ff6b01 (assuming the element exists and has the class 'active')
+// // } else {
+// //   console.error('Element not found');
+// //   color = "#000";
+// // }
+
+// const root = document.getElementsByName('body'); // Get the root element
+// const computedStyle = window.getComputedStyle(root);
+// const orangeValue = computedStyle.getPropertyValue('--orange');
+
+// return orangeValue;
+
+//   }
+
+  const establishmentUrl = getUserData().ESTABLISSEMENT.ESTABLISHMENT_LINK;
+  const EST_url = `http://localhost:3000/${establishmentUrl}`;
+  const [value, setValue] = useState(EST_url);
+  const [dataUrl, _qrious] = useQrious({
+    value,
+    size: 1000,
+    foreground: "#000",
+    level: "H",
+    padding: 25,
+  });
+
+  const handleDownloadQr_LINK = () => {
+    const imgElement = document.getElementById("QRCODE"); // Get the image element by ID
+    const dataUrl = imgElement.src; // Extract the data URL from the 'src' attribute
+
+    // Convert data URL to a blob (binary data)
+    const data = dataUrl.replace(/^data:image\/\w+;base64,/, ""); // Remove data URL prefix
+    const byteArray = data.split("").map((char) => char.charCodeAt(0));
+    const blob = new Blob([new Uint8Array(byteArray)], {
+      type: dataUrl.split(";")[0].split(":")[1],
+    });
+
+    // Create a link element to trigger the download
+    const downloadLink = document.createElement("a");
+    downloadLink.href = URL.createObjectURL(blob); // Create a temporary URL for the blob
+    downloadLink.download = "image.jpg"; // Set the desired filename
+
+    // Trigger the click event to initiate the download
+    downloadLink.click();
+
+    // Remove the temporary URL from memory
+    URL.revokeObjectURL(downloadLink.href);
+  };
+
+  const handleDownloadQr = () => {
+    const imgElement = document.getElementById("QRCODE"); // Get the image element by ID
+    const dataUrl = imgElement.src; // Extract the data URL from the 'src' attribute
+
+    // Create a link element to trigger the download
+    const downloadLink = document.createElement("a");
+    downloadLink.href = dataUrl; // Create a temporary URL for the blob
+    downloadLink.download = `${establishmentUrl}_${new Date()}.png`; // Set the desired filename
+
+    // Trigger the click event to initiate the download
+    downloadLink.click();
+  };
+
   // const [logo, setLogo] = useState();
   // const establishmentLOGO = getUserData().ESTABLISSEMENT.ESTABLISHMENT_LOGO;
 
@@ -340,15 +413,16 @@ const AsideMenu = ({ menuio, isMenuActive }) => {
 
   const [imageUrl, setImageUrl] = useState(null);
 
-  const handleClickNavItem = ()=>{
-   if(window.innerWidth <=750){
-    menuio();
-   }
-  }
-
+  const handleClickNavItem = () => {
+    if (window.innerWidth <= 750) {
+      menuio();
+    }
+  };
 
   useEffect(() => {
     // Fetch logo from external source (replace with your actual logic)
+    console.log("DASHBOARD getUserData().ESTABLISSEMENT.ESTABLISHMENT_LOGO", getUserData().ESTABLISSEMENT.ESTABLISHMENT_LOGO);
+    
     fetch(
       endpoints.public.fileDownload +
         `?path=${
@@ -368,13 +442,26 @@ const AsideMenu = ({ menuio, isMenuActive }) => {
     <div className={`asideMenu ${isMenuActive ? "activeMenuMob" : ""}`}>
       <div className="asideMenu__struct">
         <div className="logoResto">
-          <img style={imageUrl ? {opacity: 1, transform:"rotate(2turn) scale(1)"} : {opacity: 0,transform:"rotate(1turn) scale(2)"}} src={imageUrl} alt={logResto} />
+          <img
+            style={
+              imageUrl
+                ? { opacity: 1, transform: "rotate(2turn) scale(1)" }
+                : { opacity: 0, transform: "rotate(1turn) scale(2)" }
+            }
+            src={imageUrl}
+            alt={logResto}
+          />
         </div>
 
         <nav className="menuLink">
           {navItems.map(function (item, index) {
             return (
-              <NavLink onClick={handleClickNavItem} key={index} to={item.path} className={"menu_item link"}>
+              <NavLink
+                onClick={handleClickNavItem}
+                key={index}
+                to={item.path}
+                className={"menu_item link"}
+              >
                 <div className="menu_item__struct">
                   {item.ico}
                   <span className="text">{item.label}</span>
@@ -410,8 +497,38 @@ const AsideMenu = ({ menuio, isMenuActive }) => {
               />
             </svg>
           </div>
+
           <div className="qr">
-            <img src={imgQR} alt="imgQR" />
+            <img id="QRCODE" src={dataUrl} alt="imgQR" />
+          </div>
+          <div onClick={handleDownloadQr} className="qrlink" style={{ marginTop: "1em" }}>
+            {" "}
+            <span  className="text">
+              Download QR code
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width={20}
+              height={20}
+              color="#717e91"
+              fill="none"
+            >
+              <path
+                d="M12 14.5L12 4.5M12 14.5C11.2998 14.5 9.99153 12.5057 9.5 12M12 14.5C12.7002 14.5 14.0085 12.5057 14.5 12"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M20 16.5C20 18.982 19.482 19.5 17 19.5H7C4.518 19.5 4 18.982 4 16.5"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </div>
         </div>
       </div>

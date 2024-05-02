@@ -17,6 +17,8 @@ import Admin from "./Admin/pages/Admin";
 import Settings from "./Admin/pages/Settings";
 import UpdateCategory from "./Admin/pages/UpdateCategory";
 import UpdateMenus from "./Admin/pages/UpdateMenus";
+import UpdateAdmin from "./Admin/pages/UpdateAdmin";
+import Landing from "./landingPage/pages/Landing";
 
 const routes = () => {
   const currentUser = localStorage.getItem("CurrentUser");
@@ -24,10 +26,19 @@ const routes = () => {
   return (
     <Routes>
       {/* Users routes */}
-      <Route index exact path="/" element={<HomePage />} />
+      <Route index exact path="/" element={<Landing/>} />
+
+      {/* DEMO */}
+      {/* <Route index exact path="/" element={<HomePage/>} />
       <Route exact path="/details/:id" element={<MenuDetails />} />
       <Route exact path="/checkout" element={<Checkout />} />
-      <Route exact path="/finalize" element={<Finalize />} />
+      <Route exact path="/finalize" element={<Finalize />} /> */}
+
+
+      <Route index exact path="/:ESTABLISHMENT_LINK" element={<HomePage/>} />
+      <Route exact path="/:ESTABLISHMENT_LINK/details/:ARTICLE_ID" element={<MenuDetails />} />
+      <Route exact path="/:ESTABLISHMENT_LINK/checkout" element={<Checkout />} />
+      <Route exact path="/:ESTABLISHMENT_LINK/finalize" element={<Finalize />} />
 
       <Route exact path="/admin/" element={<Connexion />} />
       <Route exact path="/admin/resetpassword" element={<ResetPassword />} />
@@ -47,6 +58,7 @@ const routes = () => {
           />
           <Route exact path="/admin/app/categories" element={<Categories />} />
           <Route exact path="/admin/app/categories/updatecategory" element={<UpdateCategory />} />
+          <Route exact path="/admin/app/admin/updateadmin" element={<UpdateAdmin />} />
           <Route exact path="/admin/app/menus/updatemenus" element={<UpdateMenus />} />
           <Route exact path="/admin/app/sales" element={<Sales />} />
           <Route exact path="/admin/app/admin" element={<Admin />} />

@@ -8,6 +8,9 @@ export const formatNumberWith = (number, separator=',') => {
   export const getUserData = () => {
     return JSON.parse(localStorage.getItem("CurrentUser"));
   };
+  export const getEstablishmentData = () => {
+    return JSON.parse(localStorage.getItem("currentEstablishmentData"));
+  };
 
 
   export const trimLongString = (text, maxLength) => {
@@ -46,6 +49,170 @@ function nomDuMois(mois) {
 export const isEmpty = (val) => {
   return val === undefined || val == null || val.length <= 0 ? true : false;
 };
+
+
+export function convertFromBase93(base93String) {
+  // Inverted base 93 mapping (reverse the key-value pairs)
+  const base63Mapping = {
+    0: 0,
+    1: 1,
+    2: 2,
+    3: 3,
+    4: 4,
+    5: 5,
+    6: 6,
+    7: 7,
+    8: 8,
+    9: 9,
+    a: 10,
+    b: 11,
+    c: 12,
+    d: 13,
+    e: 14,
+    f: 15,
+    g: 16,
+    h: 17,
+    i: 18,
+    j: 19,
+    k: 20,
+    l: 21,
+    m: 22,
+    n: 23,
+    o: 24,
+    p: 25,
+    q: 26,
+    r: 27,
+    s: 28,
+    t: 29,
+    u: 30,
+    v: 31,
+    w: 32,
+    x: 33,
+    y: 34,
+    z: 35,
+    // Uppercase characters
+    A: 36,
+    B: 37,
+    C: 38,
+    D: 39,
+    E: 40,
+    F: 41,
+    G: 42,
+    H: 43,
+    I: 44,
+    J: 45,
+    K: 46,
+    L: 47,
+    M: 48,
+    N: 49,
+    O: 50,
+    P: 51,
+    Q: 52,
+    R: 53,
+    S: 54,
+    T: 55,
+    U: 56,
+    V: 57,
+    W: 58,
+    X: 59,
+    Y: 60,
+    Z: 61,
+    // Special characters (unchanged)
+    "!": 62,
+    "@": 63,
+    "#": 64,
+    $: 65,
+    "%": 66,
+    "^": 67,
+    "&": 68,
+    "*": 69,
+    "(": 70,
+    ")": 71,
+    "-": 72,
+    "+": 73,
+    "=": 74,
+    "[": 75,
+    "]": 76,
+    "{": 77,
+    "}": 78,
+    ";": 79,
+    ":": 80,
+    "<": 81,
+    ">": 82,
+    ",": 83,
+    ".": 84,
+    "/": 85,
+    "?": 86,
+    "`": 87,
+    "~": 88,
+    "|": 89,
+    "\\": 90,
+    "'": 91,
+    '"': 92,
+    _: 93,
+    " ": 94,
+  };
+
+  const invertedMapping = {};
+  for (const key in base63Mapping) {
+    invertedMapping[base63Mapping[key]] = key;
+  }
+
+  // Split the base 93 string into digits
+  const base93Digits = base93String.split("ù");
+  base93Digits.pop();
+  console.log(base93Digits);
+  // Convert each digit to its character representation
+  let decodedString = "";
+  for (const digit of base93Digits) {
+    const char = invertedMapping[digit];
+    if (char !== undefined) {
+      decodedString += char;
+    } else {
+      console.error(`Invalid base 93 digit: ${digit}`);
+      return;
+    }
+  }
+
+  return decodedString;
+}
+
+export function correctLink(originalLink) {
+  // Remove leading and trailing backslashes
+  const trimmedLink = originalLink.trim().replace(/^\\|\\$/g, '');
+
+  // Replace spaces with hyphens
+  const hyphenatedLink = trimmedLink.replace(/ /g, '-');
+
+  // Ensure path starts with forward slash
+  const correctedLink = `${hyphenatedLink}`;
+
+  return correctedLink;
+}
+
+
+export function extractUrlParameters(url) {
+  // Split the URL into an array based on '/'
+  const urlParts = url.split('/');
+
+  // Initialize an empty object to store parameters
+  const parameters = [];
+
+  // Iterate through URL parts, skipping the first one (protocol and hostname)
+  for (let i = 1; i < urlParts.length; i++) {
+    // Check if the current part is a parameter name-value pair
+    if (i % 2 === 0) {
+      // Extract the parameter name and value
+      const parameterName = urlParts[i+1];
+
+
+      // Add the parameter to the parameters object
+      parameters.push(parameterName);
+    }
+  }
+
+  return parameters;
+}
 
 
 

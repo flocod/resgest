@@ -7,6 +7,7 @@ import Panier from "../components/Panier";
 import { formatNumberWith } from "../../utils";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Checkout = (props) => {
   let initAmoutBasket = 0;
@@ -46,7 +47,12 @@ const Checkout = (props) => {
       let msg = errors.nom && errors.nom !== undefined ? errors.nom : "";
       msg = errors.tel && errors.tel !== undefined ? msg + "; " + errors.tel : "";
       msg = errors.option && errors.option !== undefined  ? msg + "; " + errors.option : "";
-      alert(msg);
+
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: msg,
+      });
     }
   };
 
