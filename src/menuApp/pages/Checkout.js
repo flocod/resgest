@@ -29,6 +29,29 @@ const Checkout = (props) => {
 
   const [errors, setErrors] = useState({});
 
+
+
+  function handleNavigation() {
+    try {
+      navigate(-1);
+    } catch (error) {
+      const link = JSON.parse(localStorage.getItem("currentEstablishmentData")).currentEstablishment.ESTABLISHMENT_LINK || 0;
+
+      if(link){
+        navigate(`/${link}`);
+      }else{
+        const EST_Link = window.location.href.split("/checkout")[0].split('/').pop(); 
+        navigate(`/${EST_Link}`);
+      }
+    }
+  }
+
+  const handleBack = () => {
+    handleNavigation();
+  };
+
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -42,11 +65,27 @@ const Checkout = (props) => {
       localStorage.setItem("formDATA", JSON.stringify(formData));
       console.log("localStorage : ", localStorage.getItem("formDATA"));
 
-      navigate("/finalize");
+      const link = JSON.parse(localStorage.getItem("currentEstablishmentData")).currentEstablishment.ESTABLISHMENT_LINK || 0;
+
+      if(link){
+        navigate(`/${link}/finalize`);
+      }else{
+        const EST_Link = window.location.href.split("/checkout")[0].split('/').pop(); 
+        navigate(`/${EST_Link}/finalize`);
+      }
+
+
     } else {
-      let msg = errors.nom && errors.nom !== undefined ? errors.nom : "";
-      msg = errors.tel && errors.tel !== undefined ? msg + "; " + errors.tel : "";
-      msg = errors.option && errors.option !== undefined  ? msg + "; " + errors.option : "";
+      let msg = "";
+      if (typeof errors === 'object') {
+        for (const field in errors) {
+          if (errors[field]) {
+            msg += `${errors[field]} `;
+          }
+        }
+      } else {
+        console.error("errors is not a valid object");
+      }
 
       Swal.fire({
         icon: "error",
@@ -65,22 +104,22 @@ const Checkout = (props) => {
 
     // Vérifier le nom
     if (!formData.nom) {
-      errors.nom = "Le nom est obligatoire";
+      errors.nom = "Le nom est obligatoire.";
     } else if (formData.nom.length < 2) {
-      errors.nom = "Le nom doit contenir au moins 2 caractères";
+      errors.nom = "Le nom doit contenir au moins 2 caractères.";
     }
 
     // Vérifier le téléphone
     if (!formData.tel) {
-      errors.tel = "Le numéro de téléphone est obligatoire";
+      errors.tel = "Le numéro de téléphone est obligatoire.";
     } else if (!/^\d+$/.test(formData.tel)) {
       errors.tel =
-        "Le numéro de téléphone doit être composé uniquement de chiffres";
+        "Le numéro de téléphone doit être composé uniquement de chiffres. ";
     }
 
     // Vérifier l'option de commande
     if (!formData.option) {
-      errors.option = "Veuillez choisir une option de commande";
+      errors.option = "Veuillez choisir une option de commande. ";
     }
 
     // Retourner les erreurs
@@ -118,7 +157,7 @@ const Checkout = (props) => {
 
       <div className=" panierBox CheckoutpanierBox">
         <div className="panierBox__struct">
-          <NavLink to="/">
+          <div onClick={handleBack}>
             <svg
               width={17}
               height={17}
@@ -131,7 +170,7 @@ const Checkout = (props) => {
                 fill="#525252"
               />
             </svg>
-          </NavLink>
+          </div>
           <h2>Checkout</h2>
           <h4>Finalisez votre commande</h4>
 

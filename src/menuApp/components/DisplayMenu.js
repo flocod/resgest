@@ -13,6 +13,21 @@ function DisplayMenu({ articles }) {
     setDisplayedItems(newDisplayedItems);
   };
 
+
+  const handleScroll = () => {
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const currentScrollY = window.scrollY;
+  
+    if (windowHeight + currentScrollY >= documentHeight) {
+      handleShowMore();
+      console.log("load more --------------------->")
+    }
+  };
+  
+  window.addEventListener('scroll', handleScroll);
+
+
   return (
     <div className="menu_list">
       {displayedItems.map((article, index) => (
@@ -29,7 +44,7 @@ function DisplayMenu({ articles }) {
           devise="FCFA"
         />
       ))}
-      {articles.length > displayedItems.length && ( // Check if there are more elements
+      {/* {articles.length > displayedItems.length && ( // Check if there are more elements
         <div className="center_container">
           <div className="btn" onClick={handleShowMore}>
             <span className="text">Voir + </span>
@@ -51,7 +66,7 @@ function DisplayMenu({ articles }) {
             </svg>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

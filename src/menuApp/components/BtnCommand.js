@@ -40,8 +40,12 @@ function BtnCommand(props) {
             {formatNumberWith(amoutBasket, ",")}
           </div>
         </div>
+        
 
-        {props.from && props.from === "checkout" ? (
+        {
+          (props.isCheckoutPage &&  props.isCheckoutPage===true) && (props.isFromBagOrder && props.isFromBagOrder===true ) ? " " : 
+          <>
+          {props.from && props.from === "checkout" ? (
           <button
             to={amoutBasket === 0 ? "#" : props.to}
             className="btn_command link"
@@ -83,6 +87,10 @@ function BtnCommand(props) {
             </svg>
           </NavLink>
         )}
+          </> 
+        }
+
+
         {/* 
         <NavLink  to={ amoutBasket === 0 ? "#" : props.to  } className="btn_command link">
           <div className="text">Commander</div>

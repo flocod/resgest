@@ -2,7 +2,34 @@ import React, { useState, useEffect } from "react";
 import imgFinal from "../images/3D Food Icon by  final.webp";
 import { NavLink } from "react-router-dom";
 import CountDownTimer from "../components/CountDownTimer";
+import { useNavigate } from "react-router-dom";
+
 const Finalize = (props) => {
+let navigate = useNavigate(); 
+const goHome = () => {
+  // Try to get the link from local storage
+  let link;
+  try {
+    const data = localStorage.getItem("currentEstablishmentData");
+    if (data) {
+      const parsedData = JSON.parse(data);
+      link = parsedData?.currentEstablishment?.ESTABLISHMENT_LINK || 0;
+    }
+  } catch (error) {
+    console.error("Error parsing currentEstablishmentData:", error);
+  }
+
+  // If link exists in local storage, use it
+  if (link) {
+    navigate(`/${link}`);
+  } else {
+    // Fallback: Extract link from current URL
+    const EST_Link = window.location.href.split("/checkout")[0].split('/').pop();
+    navigate(`/${EST_Link}`);
+  }
+};
+
+
   return (
     <main className="menuDetails Checkout Finalize">
       <div className="main_struct">
@@ -17,11 +44,11 @@ const Finalize = (props) => {
             commande
           </p>
 
-          <CountDownTimer minutes="50"></CountDownTimer>
+          <CountDownTimer ></CountDownTimer>
 
-          <NavLink to="/" className="bnt link">
+          <div onClick={goHome} className="bnt link">
             Allez à la page d'acceuil
-          </NavLink>
+          </div>
         </div>
       </div>
     </main>

@@ -3,8 +3,14 @@ import perper from "../../menuApp/images/3D Food Icon by perper.webp";
 import PanierItem from "./PanierItem";
 import BtnCommand from "./BtnCommand";
 import { formatNumberWith } from "../../utils";
+import { useNavigate } from "react-router-dom";
 
 const BagOrder = (props) => {
+
+  const navigate  = useNavigate();
+
+  const ischeckoutPage =  () => window.location.href.includes("checkout");
+
   let initAmoutBasket = 0;
 
   const readCard =localStorage.getItem("cart")  ? JSON.parse(localStorage.getItem("cart")) : [];
@@ -22,6 +28,32 @@ const BagOrder = (props) => {
   amoutBasket = initAmoutBasket;
 
   
+  const getEstablishmentLink_Name = () => {
+    // Try to get the link from local storage
+    let link;
+    const data = localStorage.getItem("currentEstablishmentData");
+    if (data) {
+      const parsedData = JSON.parse(data);
+      link = parsedData?.currentEstablishment?.ESTABLISHMENT_LINK || 0;
+    }
+    return link
+  };
+
+
+ const  handleClick = ()=>{
+  let link;
+  const data = localStorage.getItem("currentEstablishmentData");
+
+  if (data) {
+    const parsedData = JSON.parse(data);
+    console.log("parsedData",parsedData);
+    link = parsedData?.currentEstablishment?.ESTABLISHMENT_LINK || 0;
+  }
+    if (window.location.href.includes("checkout")) navigate(`/${link}/checkout`) ;
+ }
+
+
+  const estLinkName = getEstablishmentLink_Name();
 
   // Fonction pour supprimer un élément du panier
   const removeFromCart = (itemId) => {
@@ -87,7 +119,7 @@ const BagOrder = (props) => {
         </div>
       </div>
 
-      <BtnCommand to="/checkout" amoutBasket={amoutBasket}></BtnCommand>
+      <BtnCommand isCheckoutPage={ischeckoutPage} isFromBagOrder="true" handleClick={props.handleClick} to={`/${estLinkName}/checkout`} amoutBasket={amoutBasket}></BtnCommand>
 
       <div
         className="btn_close rounded_btn btn_close_panier link"

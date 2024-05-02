@@ -31,14 +31,14 @@ body {
 main {
   background: white;
   width: 884px;
-  height: 100dvh;
+  // height: 100dvh;
   overflow-x: hidden;
   overflow-y: auto;
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
   align-items: flex-start;
-  position: relative;
+  // position: relative;
   @media all and (max-width: 884px) {
     width: 100%;
   }
@@ -902,6 +902,7 @@ main {
 }
 
 .menuDetails {
+  background: none;
   .menu_img {
     display: block;
     width: 100%;
@@ -933,11 +934,11 @@ main {
     align-items: center;
     background: var(--white);
     width: 100%;
-    border-radius: 31px 31px 0px 0px;
+    border-radius: 31px 31px 31px 31px !important;
     position: relative;
     transform: translateY(-50px);
     padding-top: 20px;
-
+    
     .actionMenuPage {
       position: absolute;
       right: 0;
@@ -1135,9 +1136,10 @@ main {
       width: 8.875em;
       height: 2.75em;
       color: var(--white);
+      font-family: "Acorn_r" !important;
       box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.37);
       .text {
-        font-size: 0.875em;
+        font-size: 0.9em !important;
       }
       .ico {
         width: 1.0625em;
