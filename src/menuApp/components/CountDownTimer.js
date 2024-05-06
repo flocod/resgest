@@ -14,9 +14,12 @@ function CountDownTimer() {
     let intervalId;
 
     if (!deadlineTime) {
+      console.log("deadlineTime",deadlineTime);
       const readCard = localStorage.getItem("cart")
-        ? JSON.parse(localStorage.getItem("cart"))
-        : [];
+      ? JSON.parse(localStorage.getItem("cart"))
+      : [];
+  
+ console.log("readCard",readCard);
 
       let initTime = 0;
       console.log("PANIER : ",readCard)
@@ -35,8 +38,10 @@ function CountDownTimer() {
     }else if(deadlineTime > 0 ){
 
       intervalId = setInterval(() => {
+      
         const now = Date.now();
         const remainingTime = deadlineTime - now;
+        console.log("remainingTime",remainingTime);
         setRemainingTimeState(remainingTime);
         if (remainingTime <= 0) {
           localStorage.setItem(

@@ -34,6 +34,7 @@ const Checkout = (props) => {
   function handleNavigation() {
     try {
       navigate(-1);
+
     } catch (error) {
       const link = JSON.parse(localStorage.getItem("currentEstablishmentData")).currentEstablishment.ESTABLISHMENT_LINK || 0;
 
@@ -64,15 +65,52 @@ const Checkout = (props) => {
 
       localStorage.setItem("formDATA", JSON.stringify(formData));
       console.log("localStorage : ", localStorage.getItem("formDATA"));
+      const Est_ID = JSON.parse(localStorage.getItem("currentEstablishmentData")).currentEstablishment.ESTABLISHMENT_ID;
 
-      const link = JSON.parse(localStorage.getItem("currentEstablishmentData")).currentEstablishment.ESTABLISHMENT_LINK || 0;
 
-      if(link){
-        navigate(`/${link}/finalize`);
+      if(cart.length === 0){
+        alert('Votre panier est vide');
       }else{
-        const EST_Link = window.location.href.split("/checkout")[0].split('/').pop(); 
-        navigate(`/${EST_Link}/finalize`);
+
+        const link = JSON.parse(localStorage.getItem("currentEstablishmentData")).currentEstablishment.ESTABLISHMENT_LINK || 0;
+
+
+
+        if(link){
+          navigate(`/${link}/finalize`);
+        }else{
+
+
+          const formDataToSend = new FormData();
+  
+          formDataToSend.append('ESTABLISHMENT_ID',Est_ID);
+          formDataToSend.append('ORDER_DATA',JSON.stringify(cart));
+          formDataToSend.append('CLIENT_NAME',formData.nom);
+          formDataToSend.append('CLIENT_PHONE',formData.tel);
+          formDataToSend.append('ORDER_TYPE',formData.option);
+          formDataToSend.append('ORDER_TABLE',localStorage.getItem("QR_PLACE") || "Online" );
+  
+          // {
+          //   nom: "",
+          //   tel: "",
+          //   option: "",
+          //   comment: "",
+          // }
+          console.log("formDataToSend",formDataToSend);
+
+
+          const EST_Link = window.location.href.split("/checkout")[0].split('/').pop(); 
+          navigate(`/${EST_Link}/finalize`);
+        }
+  
+
+
       }
+
+
+      
+
+
 
 
     } else {

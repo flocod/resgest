@@ -10,6 +10,9 @@ import { endpoints } from "../API/EndPoints";
 
 import { useQrious } from "react-qrious";
 
+
+import qrious from "qrious";
+
 const icoHome = (
   <svg
     width={22}
@@ -328,13 +331,28 @@ const AsideMenu = ({ menuio, isMenuActive }) => {
   const establishmentUrl = getUserData().ESTABLISSEMENT.ESTABLISHMENT_LINK;
   const EST_url = `http://localhost:3000/${establishmentUrl}`;
   const [value, setValue] = useState(EST_url);
+  const [qrInput, setQrInput] = useState(establishmentUrl);
   const [dataUrl, _qrious] = useQrious({
-    value,
+    value:value,
     size: 1000,
     foreground: "#000",
     level: "H",
     padding: 25,
   });
+
+  const handleChange = (e)=>{
+    console.log(e); 
+    const name = e.target.name;
+    const value = e.target.value;
+    if(value!==""){
+      setQrInput(value);
+      setValue(`${EST_url}?${name}=${value}`);
+    }else{
+      setQrInput(EST_url);
+      setValue(`${EST_url}`);
+    }
+   
+  }
 
   const handleDownloadQr_LINK = () => {
     const imgElement = document.getElementById("QRCODE"); // Get the image element by ID
@@ -366,7 +384,7 @@ const AsideMenu = ({ menuio, isMenuActive }) => {
     // Create a link element to trigger the download
     const downloadLink = document.createElement("a");
     downloadLink.href = dataUrl; // Create a temporary URL for the blob
-    downloadLink.download = `${establishmentUrl}_${new Date()}.png`; // Set the desired filename
+    downloadLink.download = `${qrInput}.png`; // Set the desired filename
 
     // Trigger the click event to initiate the download
     downloadLink.click();
@@ -438,6 +456,27 @@ const AsideMenu = ({ menuio, isMenuActive }) => {
       .catch((error) => console.error("Error fetching logo:", error));
   }, []);
 
+  // useEffect(() => {
+  //   if (establishmentUrl) {
+  //     const tqrious = new qrious({
+  //       value: value, // Use the state value for dynamic QR code generation
+  //       size: 1000,
+  //       foreground: '#000',
+  //       level: 'H',
+  //       padding: 25,
+  //     });
+
+  //     tqrious.toDataURL((err, dataURL) => {
+  //       if (err) {
+  //         console.error('Error generating QR code:', err);
+  //         return;
+  //       }
+
+  //       setQrImg(dataURL);
+  //     });
+  //   }
+  // }, [establishmentUrl, value]);
+
   return (
     <div className={`asideMenu ${isMenuActive ? "activeMenuMob" : ""}`}>
       <div className="asideMenu__struct">
@@ -475,6 +514,9 @@ const AsideMenu = ({ menuio, isMenuActive }) => {
           <div className="qrlink">
             {" "}
             <span className="text">Scan to live preview</span>
+
+           
+
             <svg
               width={9}
               height={9}
@@ -497,7 +539,7 @@ const AsideMenu = ({ menuio, isMenuActive }) => {
               />
             </svg>
           </div>
-
+          <input className="qrInput" name="qrname" placeholder="Nom code QR" type="text" onChange={handleChange} />
           <div className="qr">
             <img id="QRCODE" src={dataUrl} alt="imgQR" />
           </div>

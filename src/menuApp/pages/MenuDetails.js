@@ -82,7 +82,7 @@ const MenuDetails = () => {
         price:
           Number(document.querySelector(".price").getAttribute("value")) *
           count,
-        time: 20,
+        time: Number(document.querySelector(".menu_title").getAttribute("MenuTimePreparation")),
         devise: "FCFA",
       };
       const storageCart = localStorage.getItem("cart");
@@ -352,7 +352,7 @@ const MenuDetails = () => {
                   ></MenuUserView>
                 </div>
 
-                <h2 className="menu_title">{currentArticle.ARTICLE_NAME}</h2>
+                <h2 className="menu_title" MenuTimePreparation={currentArticle.ARTICLE_PREPARE_TIME}>{currentArticle.ARTICLE_NAME}</h2>
 
                 <div className="acountable">
                   <div className="pricing">
