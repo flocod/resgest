@@ -17,6 +17,8 @@ import { extractUrlParameters } from "../../utils";
 import Swal from "sweetalert2";
 import DisplayMenu from "../components/DisplayMenu";
 import { useLocation } from "react-router-dom";
+import MenuDetailsPop from "./MenuDetailsPop";
+import { incrementArticleView } from "../../Admin/API/api";
 
 const HomePage = () => {
   const [isAbout, setIsAbout] = useState(false);
@@ -32,6 +34,8 @@ const HomePage = () => {
   const [articles, setArticles] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null); // Track selected category
   const [searchTerm, setSearchTerm] = useState(""); // Track search term
+  const [isArticleSelected, setArticleSelected] = useState(false); 
+  const [selectedArticle, setSelectedArticle] = useState(false); 
 
   const location = useLocation();
   const checkeExistData = location.state;
@@ -42,6 +46,30 @@ const HomePage = () => {
     console.log('location.state',location.state);
     console.log('location.state',location.state);
     console.log('location.state',location.state);
+
+    const fn_incrementArticleView = async (id)=>{
+
+
+      try {
+        await incrementArticleView(id).then((res)=>{
+            if(res && res.reponse){
+              console.log(res.message);
+            }else{
+              console.log(res.message);
+            }
+        })
+      } catch (error) {
+        console.log(error)
+      }
+  }
+
+    const handleClickArticle = async (id)=>{
+      fn_incrementArticleView(id);
+      setSelectedArticle(id)
+    }
+    const handleCloseArticle = ()=>{
+      setSelectedArticle(false)
+    }
 
   const handleClick = () => {
     setIsAbout(true);
@@ -388,7 +416,7 @@ const HomePage = () => {
   }, [hasLoadedData, openDays]);
 
   return (
-    <main>
+    <main id="MainContainScroll">
       {hasLoadedData && (
         <>
           <div className="main_container">
@@ -646,6 +674,7 @@ const HomePage = () => {
                 <div className="menu_list">
                   {filteredArticles.map((article, index) => (
                     <MenuItem
+                      handleClickArticle= {handleClickArticle} 
                       key={index + 1}
                       id={article.ARTICLE_ID}
                       categoryId={article.ARTICLE_CATEGORY}
@@ -660,12 +689,13 @@ const HomePage = () => {
                   ))}
                 </div>
               ) : searchTerm === "" ? (
-                <DisplayMenu articles={articles}></DisplayMenu>
+                <DisplayMenu  handleClickArticle= {handleClickArticle}  articles={articles}></DisplayMenu>
               ) : (
                 <div className="menu_list">
                   {filteredArticlesSearch.length !== 0
                     ? filteredArticlesSearch.map((article, index) => (
                         <MenuItem
+                          handleClickArticle= {handleClickArticle} 
                           key={index + 1}
                           id={article.ARTICLE_ID}
                           categoryId={article.ARTICLE_CATEGORY}
@@ -701,6 +731,11 @@ const HomePage = () => {
                   onClose={() => setIsAbout(false)}
                 />
               </>
+            )}
+          </div>
+          <div className="main_struct">
+            {selectedArticle && (
+              <MenuDetailsPop handleCloseArticle={handleCloseArticle} selectedArticle={selectedArticle}></MenuDetailsPop>
             )}
           </div>
 

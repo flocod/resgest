@@ -7,7 +7,7 @@ function CountDownTimer() {
 
   const [deadlineTime, setDeadlineTime] = useState(Number(getDeadlineMS)); // Stores the deadline time in milliseconds
   const [remainingTimeState, setRemainingTimeState] = useState(0); // Stores the deadline time in milliseconds
-
+  const [isCountFinished ,setCountFinished] = useState(false);
   useEffect(() => {
     // Set deadline time on component mount
 
@@ -19,7 +19,7 @@ function CountDownTimer() {
       ? JSON.parse(localStorage.getItem("cart"))
       : [];
   
- console.log("readCard",readCard);
+      console.log("readCard",readCard);
 
       let initTime = 0;
       console.log("PANIER : ",readCard)
@@ -51,21 +51,38 @@ function CountDownTimer() {
 
           localStorage.removeItem("cart");
         
-          Swal.fire({
-            icon: "success",
-            title: "Good job!",
-            text: "Votre Commande est prete !",
-          });
-          clearInterval(intervalId);
+
+         
+          // Swal.fire({
+          //   icon: "success",
+          //   title: "Good job!",
+          //   text: "Votre Commande est prete !",
+          // });
+          setDeadlineTime(0)
+          setCountFinished(true)
         }
       }, 1000);
 
+
+
+
+
+    }
+
+    if(isCountFinished ===true){
+      clearInterval(intervalId)
+      Swal.fire({
+        icon: "success",
+        title: "Good job!",
+        text: "Votre Commande est prete !",
+      });
+      clearInterval(intervalId);
     }
 
 
 
     return () => clearInterval(intervalId); // Clean up interval on component unmount
-  }, [deadlineTime, remainingTimeState]); // Re-run effect when deadlineTime changes
+  }, [deadlineTime, remainingTimeState,isCountFinished]); // Re-run effect when deadlineTime changes
 
   const formattedTime = () => {
     if (!deadlineTime || remainingTimeState <= 0) return "00 min 00 sec";

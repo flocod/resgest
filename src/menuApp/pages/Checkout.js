@@ -16,11 +16,21 @@ const Checkout = (props) => {
     ? JSON.parse(localStorage.getItem("cart"))
     : [];
 
+
+    const checkOutStorageForm = localStorage.getItem("CheckoutFormDATA")
+    ? JSON.parse(localStorage.getItem("CheckoutFormDATA"))
+    : 0;
+
   const [cart, setCart] = useState([...readCard]);
 
   const [isPanierDisplay, setIsPanierDisplay] = useState(false);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState( checkOutStorageForm ? {
+    nom: checkOutStorageForm.nom,
+    tel: checkOutStorageForm.tel,
+    option: checkOutStorageForm.option,
+    comment: checkOutStorageForm.comment,
+  } : {
     nom: "",
     tel: "",
     option: "",
@@ -63,8 +73,8 @@ const Checkout = (props) => {
       // Formulaire valide, soumettre les données
       console.log("Formulaire soumis");
 
-      localStorage.setItem("formDATA", JSON.stringify(formData));
-      console.log("localStorage : ", localStorage.getItem("formDATA"));
+      localStorage.setItem("CheckoutFormDATA", JSON.stringify(formData));
+      console.log("localStorage : ", JSON.parse(localStorage.getItem("CheckoutFormDATA")));
       const Est_ID = JSON.parse(localStorage.getItem("currentEstablishmentData")).currentEstablishment.ESTABLISHMENT_ID;
 
 

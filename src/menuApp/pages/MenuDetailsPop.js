@@ -14,7 +14,7 @@ import { useLocation } from "react-router-dom";
 import { getArticleById, incrementArticleView } from "../../Admin/API/api";
 import Swal from "sweetalert2";
 
-const MenuDetails = () => {
+const MenuDetailsPop = (props) => {
   const [cart, setCart] = useState([]);
 
   const [count, setCount] = useState(0); // Initial value set to 1
@@ -33,18 +33,24 @@ const MenuDetails = () => {
 
   const [hasIncrement, setHasIncrement] = useState(false); // Nouvelle variable d'état
 
-  // const [isEstablishmentLoad, setEstablishmentLoad] = useState(localStorage.getItem('currentEstablishmentData') ? true : false);
+
 
   const navigate = useNavigate();
 
-  // const location = useLocation();
-  // const isFromHome = location.state?.isFromHome; // Check for optional property
 
-  const [establishment_URL, article_ID] =
+
+  // const [establishment_URL, article_ID] =
+  //   window.location.href.split("/details/");
+  // const establishment_link_path = establishment_URL.split("/").pop();
+
+// const getEstablishmentID = ()=>{
+//   const establishment_URL = JSON.parse(localStorage.getItem('currentEstablishmentData')).currentEstablishment.ESTABLISHMENT_LINK;
+// }
+  const [establishment_URL, article_ID] = [JSON.parse(localStorage.getItem('currentEstablishmentData')).currentEstablishment.ESTABLISHMENT_LINK,props.selectedArticle];
     window.location.href.split("/details/");
-  const establishment_link_path = establishment_URL.split("/").pop();
+  const establishment_link_path = establishment_URL;
 
-  console.log("establishment_link_path ===>", establishment_link_path);
+  // console.log("establishment_link_path ===>", establishment_link_path);
 
   const url = window.location.href;
   const parsedURL = new URL(url);
@@ -166,15 +172,15 @@ const MenuDetails = () => {
     const fn_getArticleById = async () => {
       setIsLoading(true);
 
-      const [establishment_URL, article_ID] =
-        window.location.href.split("/details/");
-      const establishment_link_path = establishment_URL.split("/").pop();
+      // const [establishment_URL, article_ID] =
+      //   window.location.href.split("/details/");
+      // const establishment_link_path = establishment_URL.split("/").pop();
 
-      const id = article_ID.split("?").shift();
-      console.log("article_ID", id);
+      // const id = article_ID.split("?").shift();
+      // console.log("article_ID", id);
 
       try {
-        await getArticleById(id).then((res) => {
+        await getArticleById(article_ID).then((res) => {
           if (res.reponse === 1) {
             console.log("Result :", res);
             setCurrentArticle(res.data);
@@ -291,7 +297,7 @@ const MenuDetails = () => {
   //   }, [cart]);
 
   return (
-    <main className="menuDetails">
+    <main className="menuDetails MenuDetailsPop">
       {hasLoadedData && (
         <>
           {" "}
@@ -337,7 +343,7 @@ const MenuDetails = () => {
                     </svg>
                   </div>
 
-                  <div onClick={handleClose} className="btn_close rounded_btn">
+                  <div onClick={props.handleCloseArticle} className="btn_close rounded_btn">
                     <svg
                       width={16}
                       height={16}
@@ -445,4 +451,4 @@ const MenuDetails = () => {
   );
 };
 
-export default MenuDetails;
+export default MenuDetailsPop;

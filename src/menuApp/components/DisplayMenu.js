@@ -3,14 +3,16 @@ import MenuItem from "./MenuItem";
 
 const MAX_ITEMS_TO_SHOW = 4; // Number of items to display initially
 
-function DisplayMenu({ articles }) {
+function DisplayMenu({ articles,handleClickArticle }) {
   const [displayedItems, setDisplayedItems] = useState(articles.slice(0, MAX_ITEMS_TO_SHOW));
+
 
   const handleShowMore = () => {
     const newDisplayedItems = displayedItems.concat(
       articles.slice(displayedItems.length, displayedItems.length + MAX_ITEMS_TO_SHOW)
     );
     setDisplayedItems(newDisplayedItems);
+
   };
 
 
@@ -18,11 +20,22 @@ function DisplayMenu({ articles }) {
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight;
     const currentScrollY = window.scrollY;
+
+    if((displayedItems.length < articles.length)){
+      if (windowHeight + currentScrollY >= documentHeight ) {
+
+        console.log("displayedItems.length",displayedItems.length)
+        console.log("articles.length",articles.length)
   
-    if (windowHeight + currentScrollY >= documentHeight) {
-      handleShowMore();
-      console.log("load more --------------------->")
+        handleShowMore();
+        console.log("load more --------------------->")
+        console.log("PAS ENCORE tout chargé")
+      }
+    }else{
+      console.log("J'ai tout chargé")
     }
+  
+
   };
   
   window.addEventListener('scroll', handleScroll);
@@ -32,6 +45,7 @@ function DisplayMenu({ articles }) {
     <div className="menu_list">
       {displayedItems.map((article, index) => (
         <MenuItem
+          handleClickArticle= {handleClickArticle} 
           key={index + 1}
           id={article.ARTICLE_ID}
           categoryId={article.ARTICLE_CATEGORY}

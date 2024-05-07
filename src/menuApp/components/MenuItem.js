@@ -5,8 +5,7 @@ import MenuTimePreparation from './MenuTimePreparation';
 import { useNavigate } from 'react-router-dom';
 import { incrementArticleView } from '../../Admin/API/api';
 function MenuItem(props) {
-  const navigate = useNavigate()
-
+  const navigate = useNavigate();
   const fn_incrementArticleView = async (id)=>{
 
 
@@ -24,17 +23,33 @@ function MenuItem(props) {
   }
 
 
-  const handleClick = (id)=>{
-    const goTo = document.getElementById(id).getAttribute("data-to");
-    console.log("goTo : ", goTo)
+  // const handleClick = (id)=>{
+  //   // const goTo = document.getElementById(id).getAttribute("data-to");
+  //   // console.log("goTo : ", goTo)
+  //   // fn_incrementArticleView(id).then(()=> navigate(goTo, {isFromHome : true}))
 
-    fn_incrementArticleView(id).then(()=> navigate(goTo, {isFromHome : true}))
+  //   //*****  ORDER ALTERNATIF TO POPUP MENUDETAIL
 
-   
-  }
+//onClick={()=>handleClick(props.id)}
+
+                      /* <MenuItem
+                        handleClickArticle={handleClickArticle}
+                        handleCloseArticle={handleCloseArticle}
+                        key={index + 1}
+                        id={article.ARTICLE_ID}
+                        categoryId={article.ARTICLE_CATEGORY}
+                        nom={article.ARTICLE_NAME}
+                        descr={article.ARTICLE_DESCRIPTION}
+                        price={article.ARTICLE_PRICE}
+                        image={article.ARTICLE_IMG_1}
+                        time={article.ARTICLE_PREPARE_TIME}
+                        views={Number(article.ARTICLE_VIEW)}
+                        devise="FCFA"
+                      /> */
+  // }
 
     return (
-      <div onClick={()=>handleClick(props.id)} id={props.id} data-to={"./details/"+ props.id+"?prev=true"} className={`menu link ${props.categoryId}`} >
+      <div  onClick={()=>props.handleClickArticle(props.id)}  id={props.id} data-to={"./details/"+ props.id+"?prev=true"} className={`menu link ${props.categoryId}`} >
         <div className="menu_struct">
           <div className="menu_img">
             <img src={props.image} alt={props.image} />

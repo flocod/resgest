@@ -903,17 +903,22 @@ main {
 
 .menuDetails {
   background: none;
+
+
+
+
+  
   .menu_img {
     display: block;
     width: 100%;
-    overflow: hidden;
-    height: 35vh;
+    // overflow: hidden;
+    height: auto;
     position: relative;
 
     .img {
       width: 100%;
-      height: 100%;
-      overflow: hidden;
+      // height: 100%;
+      // overflow: hidden;
       position: absolute;
       left: 0;
       top: 0;
@@ -938,6 +943,7 @@ main {
     position: relative;
     transform: translateY(-50px);
     padding-top: 20px;
+    
     
     .actionMenuPage {
       position: absolute;
@@ -1075,6 +1081,17 @@ main {
       }
     }
   }
+}
+
+.MenuDetailsPop{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 50;
+  background: white;
 }
 
 .box_btn_command {
